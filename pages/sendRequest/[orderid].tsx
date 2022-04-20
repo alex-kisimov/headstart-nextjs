@@ -60,8 +60,13 @@ const SendrequestPage: FunctionComponent = () => {
   }, [storeToken, query])
 
   return (
-    <div>
-      <h1 className={styles.title}>Send request</h1>
+    <div className="wrapper page-container">
+      <div className="title-striped">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 497.6 116.7" width="447.6" height="116.7"><path d="M89 42.8v-8.3l62.4-28.6v11zM23.1 53.2V59l96.8-48.6V0zM0 79.6l53.4-22.1v-6.7L0 75.2z" fill="#FF6441"></path></svg>
+        </div>
+        <h1>Send request</h1>
+      </div>
       {orderDetails && (
         <>
           <div className={styles.tableHead}>

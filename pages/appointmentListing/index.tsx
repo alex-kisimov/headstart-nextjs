@@ -163,7 +163,7 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
     }, [storeToken])
 
     return (
-        <>
+        <div className='wrapper page-container'>
             <div className={styles.title}>
                 <div className="title-striped">
                     <div>
@@ -217,7 +217,7 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                     </>
                 )}
             </div>
-        </>
+        </div>
     )
 }
 

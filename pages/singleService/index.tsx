@@ -54,7 +54,7 @@ function generateUUID() {
   })
 }
 
-const SingleServicePage: FunctionComponent<OcProductListProps> = ( { options }) => {
+const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) => {
   const router = useRouter()
   const firstOrederId = generateUUID()
   const [rows, setRows] = useState([{ orderId: firstOrederId }])
@@ -97,7 +97,7 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ( { options }) 
     const orders = []
 
     for (const [orderId, value] of Object.entries(ordersLineItems)) {
-      const valueType:any = value;
+      const valueType: any = value;
       await Orders.Create("Outgoing", { ID: orderId }).then(() => {
         LineItems.Create("Outgoing", orderId, {
           ProductID: valueType.lineItemId,
@@ -125,73 +125,74 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ( { options }) 
 
   return (
     <>
-    <div className={styles.hero__wrapper}>
-      <img src="/sshero.png" alt="" className={styles.hero} />
-    </div>
-
-    <div className={styles.single_service}>
-      <div className={styles.content__wrapper}>
-          <div className={styles.content}>
-            <div className="title-striped">
-              <div>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 497.6 116.7" width="447.6" height="116.7"><path d="M89 42.8v-8.3l62.4-28.6v11zM23.1 53.2V59l96.8-48.6V0zM0 79.6l53.4-22.1v-6.7L0 75.2z" fill="#FF6441"></path></svg>
-              </div>
-              <h1>Container Weighing (VGM)</h1>
-            </div>
-            <button className='button button--small'>Request a service</button>
-            <p>
-              The following frequently asked questions regarding trucking requirements and the draying of containers. All links are live and will assist you in addressing your current needs.
-            </p>
-            <p>
-              APM Terminals are dedicated to providing you with the best customer service. Should you have any questions or concerns please call our staff at (310) 221-4100 for assistance.
-            </p>
-
-            <h2 className={styles.content__heading_break}>About VGM</h2>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Non pulvinar neque laoreet suspendisse interdum consectetur libero. Tempus egestas sed sed risus pretium quam vulputate dignissim. Vel turpis nunc eget lorem dolor sed viverra ipsum. At volutpat diam ut venenatis tellus in metus vulputate. Sed libero enim sed faucibus turpis. Dignissim suspendisse in est ante in nibh mauris cursus. Scelerisque eleifend donec pretium vulputate sapien nec. Cursus vitae congue mauris rhoncus aenean vel. Vitae semper quis lectus nulla at volutpat. Ut pharetra sit amet aliquam id diam maecenas.
-            </p>
-            <p>
-              Ullamcorper morbi tincidunt ornare massa eget egestas purus. Commodo elit at imperdiet dui accumsan. Orci phasellus egestas tellus rutrum tellus pellentesque eu tincidunt. Pretium nibh ipsum consequat nisl vel. Quis lectus nulla at volutpat diam. Imperdiet dui accumsan sit amet nulla facilisi. Diam maecenas ultricies mi eget mauris pharetra. Neque sodales ut etiam sit amet nisl purus in. A condimentum vitae sapien pellentesque habitant. Nulla posuere sollicitudin aliquam ultrices sagittis orci a. Netus et malesuada fames ac turpis egestas maecenas pharetra convallis. Quis ipsum suspendisse ultrices gravida dictum fusce ut placerat orci. Cursus vitae congue mauris rhoncus. At lectus urna duis convallis convallis.
-            </p>
-          </div>
-
-          <div className={styles.content__side}>
-            <div className={styles.card}>
-              <h4>Terminal Tariffs</h4>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incidiut ut labore
-                et dolore magna aliqua. Non pulvinar neque laoreet suspendisse interdum consectetur libero
-              </p>
-              <div className={styles.download__button_wrapper}>
-                <div className={styles.download__button}>
-                  <img src="/images/dlbtn_off.svg" alt=""/>
-                  <img src="/images/dlbtn_on.svg" alt=""/>
+      <div className={styles.hero__wrapper}>
+        <img src="/sshero.png" alt="" className={styles.hero} />
+      </div>
+      <div className="page-container wrapper">
+        <div className={styles.single_service}>
+          <div className={styles.content__wrapper}>
+            <div className={styles.content}>
+              <div className="title-striped">
+                <div>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 497.6 116.7" width="447.6" height="116.7"><path d="M89 42.8v-8.3l62.4-28.6v11zM23.1 53.2V59l96.8-48.6V0zM0 79.6l53.4-22.1v-6.7L0 75.2z" fill="#FF6441"></path></svg>
                 </div>
-                <span className={styles.download__button_text}>Download 2022 tariffs</span>
+                <h1>Container Weighing (VGM)</h1>
               </div>
+              <button className='button button--small'>Request a service</button>
+              <p>
+                The following frequently asked questions regarding trucking requirements and the draying of containers. All links are live and will assist you in addressing your current needs.
+              </p>
+              <p>
+                APM Terminals are dedicated to providing you with the best customer service. Should you have any questions or concerns please call our staff at (310) 221-4100 for assistance.
+              </p>
+
+              <h2 className={styles.content__heading_break}>About VGM</h2>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Non pulvinar neque laoreet suspendisse interdum consectetur libero. Tempus egestas sed sed risus pretium quam vulputate dignissim. Vel turpis nunc eget lorem dolor sed viverra ipsum. At volutpat diam ut venenatis tellus in metus vulputate. Sed libero enim sed faucibus turpis. Dignissim suspendisse in est ante in nibh mauris cursus. Scelerisque eleifend donec pretium vulputate sapien nec. Cursus vitae congue mauris rhoncus aenean vel. Vitae semper quis lectus nulla at volutpat. Ut pharetra sit amet aliquam id diam maecenas.
+              </p>
+              <p>
+                Ullamcorper morbi tincidunt ornare massa eget egestas purus. Commodo elit at imperdiet dui accumsan. Orci phasellus egestas tellus rutrum tellus pellentesque eu tincidunt. Pretium nibh ipsum consequat nisl vel. Quis lectus nulla at volutpat diam. Imperdiet dui accumsan sit amet nulla facilisi. Diam maecenas ultricies mi eget mauris pharetra. Neque sodales ut etiam sit amet nisl purus in. A condimentum vitae sapien pellentesque habitant. Nulla posuere sollicitudin aliquam ultrices sagittis orci a. Netus et malesuada fames ac turpis egestas maecenas pharetra convallis. Quis ipsum suspendisse ultrices gravida dictum fusce ut placerat orci. Cursus vitae congue mauris rhoncus. At lectus urna duis convallis convallis.
+              </p>
             </div>
 
-            <div className={styles.card}>
-              <h4>Contact Terminal</h4>
-              <p>
-                Ullamcorper morbi tincidunt ornare massa eget egestas purus. Commodo elit at imperdiet dui accumsan
-              </p>
-              <div className={styles.download__button_wrapper}>
-                <div className={styles.download__button}>
-                  <img src="/images/contact_off.svg" alt=""/>
-                  <img src="/images/contact_on.svg" alt=""/>
+            <div className={styles.content__side}>
+              <div className={styles.card}>
+                <h4>Terminal Tariffs</h4>
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incidiut ut labore
+                  et dolore magna aliqua. Non pulvinar neque laoreet suspendisse interdum consectetur libero
+                </p>
+                <div className={styles.download__button_wrapper}>
+                  <div className={styles.download__button}>
+                    <img src="/images/dlbtn_off.svg" alt="" />
+                    <img src="/images/dlbtn_on.svg" alt="" />
+                  </div>
+                  <span className={styles.download__button_text}>Download 2022 tariffs</span>
                 </div>
-                <span className={styles.download__button_text}>Contact</span>
+              </div>
+
+              <div className={styles.card}>
+                <h4>Contact Terminal</h4>
+                <p>
+                  Ullamcorper morbi tincidunt ornare massa eget egestas purus. Commodo elit at imperdiet dui accumsan
+                </p>
+                <div className={styles.download__button_wrapper}>
+                  <div className={styles.download__button}>
+                    <img src="/images/contact_off.svg" alt="" />
+                    <img src="/images/contact_on.svg" alt="" />
+                  </div>
+                  <span className={styles.download__button_text}>Contact</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-
-        <div className={styles.request__container}>
+      </div>
+      <div className={styles.request__container}>
         <div className={styles.request}>
           <h2 className={styles.request_title}>Request a service</h2>
           <div className={styles.stepper}>
-            <img src="/right_arrow.svg" alt="" className={styles.stepper_rightarrow}/>
+            <img src="/right_arrow.svg" alt="" className={styles.stepper_rightarrow} />
             <span>Select service</span>
             <div className={styles.stepper_spacer}></div>
             <div className={styles.stepper_dot}></div>
@@ -203,25 +204,25 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ( { options }) 
           <form onSubmit={onFormSubmit} className={styles.request_form}>
             {rows.map((row, i) => {
               return (
-                  <div key={row.orderId} className={styles.selectWrapper}>
-                    {i === 0 ? <label htmlFor="services">Services</label> : <button type="button" className={styles.request_remove_button} onClick={removeRow}></button>}
-                    <select
-                      id="services"
-                      className={styles.request_select}
-                      data-order-id={row.orderId}
-                      data-value-type="lineItemId"
-                      onChange={onLineItemChange}
-                    >
-                      <option>Please select</option>
-                      {products.map((product) => {
-                        return (
-                          <option key={product.ID} data-id={product.ID} value={product.ID}>
-                            {product.Name}
-                          </option>
-                        )
-                      })}
-                    </select>
-                  </div>
+                <div key={row.orderId} className={styles.selectWrapper}>
+                  {i === 0 ? <label htmlFor="services">Services</label> : <button type="button" className={styles.request_remove_button} onClick={removeRow}></button>}
+                  <select
+                    id="services"
+                    className={styles.request_select}
+                    data-order-id={row.orderId}
+                    data-value-type="lineItemId"
+                    onChange={onLineItemChange}
+                  >
+                    <option>Please select</option>
+                    {products.map((product) => {
+                      return (
+                        <option key={product.ID} data-id={product.ID} value={product.ID}>
+                          {product.Name}
+                        </option>
+                      )
+                    })}
+                  </select>
+                </div>
               )
             })}
             <div className={styles.stepper_button_wrapper}>
@@ -233,8 +234,6 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ( { options }) 
           </form>
         </div>
       </div>
-
-    </div>
     </>
   )
 }

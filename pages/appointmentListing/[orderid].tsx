@@ -48,9 +48,9 @@ const OrderPage: FunctionComponent = () => {
         },
       }).then((response) => {
         if (response.PromotionDiscount) {
-          Orders.RemovePromotion('Outgoing', query.orderid.toString(), 'container-weighing').then(
+          Orders.RemovePromotion('Outgoing', query.orderid.toString(), 'container-calc').then(
             () => {
-              Orders.AddPromotion('Outgoing', query.orderid.toString(), 'container-weighing').then(
+              Orders.AddPromotion('Outgoing', query.orderid.toString(), 'container-calc').then(
                 () => {
                   push('/appointmentListing')
                 }
@@ -58,11 +58,9 @@ const OrderPage: FunctionComponent = () => {
             }
           )
         } else {
-          Orders.AddPromotion('Outgoing', query.orderid.toString(), 'container-weighing').then(
-            () => {
-              push('/appointmentListing')
-            }
-          )
+          Orders.AddPromotion('Outgoing', query.orderid.toString(), 'container-calc').then(() => {
+            push('/appointmentListing')
+          })
         }
       })
     })

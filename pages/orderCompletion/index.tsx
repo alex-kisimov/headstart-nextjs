@@ -35,7 +35,7 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                 });
 
                 Promise.all(requests).then((lineItems) => {
-                    setShowLoader(false)
+                    setShowLoader(false);
 
                     orders.forEach((order, i) => {
                         orders[i]['LineItems'] = lineItems[i].Items

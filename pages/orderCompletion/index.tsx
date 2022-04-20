@@ -31,7 +31,7 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                 let orders = response.Items;
 
                 response.Items.forEach(order => {
-                    requests.push(LineItems.List('Incoming', order.ID))
+                    requests.push(LineItems.List('Incoming', order.ID));
                 });
 
                 Promise.all(requests).then((lineItems) => {

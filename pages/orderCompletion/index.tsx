@@ -41,7 +41,7 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                         orders[i]['LineItems'] = lineItems[i].Items
                     })
 
-                    setOrders(orders)
+                    setOrders(orders);
                 })
             });
         }

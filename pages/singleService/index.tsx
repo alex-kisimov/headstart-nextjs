@@ -62,8 +62,10 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ( { options }) 
   const products = useOcProductList(options)
 
   const onLineItemChange = (e) => {
+    console.log(e.currentTarget.options[e.currentTarget.selectedIndex].dataset.supplier)
     const { orderId } = e.currentTarget.dataset
     const { valueType } = e.currentTarget.dataset
+    const supplierId = e.currentTarget.options[e.currentTarget.selectedIndex].dataset.supplier
     const newOrdersLineItems = { ...ordersLineItems }
 
     if (typeof newOrdersLineItems[orderId] === 'undefined') {
@@ -71,6 +73,7 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ( { options }) 
     }
 
     newOrdersLineItems[orderId][valueType] = e.currentTarget.value
+    newOrdersLineItems[orderId].supplierId = supplierId
 
     setOrdersLineItems(newOrdersLineItems)
   }
@@ -96,9 +99,11 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ( { options }) 
     e.preventDefault()
     const orders = []
 
+    console.log(ordersLineItems)
     for (const [orderId, value] of Object.entries(ordersLineItems)) {
       const valueType:any = value;
-      await Orders.Create("Outgoing", { ID: orderId }).then(() => {
+      console.log(valueType)
+      await Orders.Create("Outgoing", { ID: orderId, ToCompanyID: valueType.supplierId }).then(() => {
         LineItems.Create("Outgoing", orderId, {
           ProductID: valueType.lineItemId,
           Quantity: 1
@@ -110,11 +115,9 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ( { options }) 
         })
       })
       orders.push(orderId)
-      console.log(orderId)
-      console.log(value)
     }
 
-    window.localStorage.setItem("orders", JSON.stringify(orders))
+    // window.localStorage.setItem("orders", JSON.stringify(orders))
 
     router.push("/appointmentListing")
   }
@@ -215,7 +218,7 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ( { options }) 
                       <option>Please select</option>
                       {products.map((product) => {
                         return (
-                          <option key={product.ID} data-id={product.ID} value={product.ID}>
+                          <option key={product.ID} data-id={product.ID} value={product.ID} data-supplier={product.DefaultSupplierID}>
                             {product.Name}
                           </option>
                         )

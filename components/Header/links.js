@@ -13,8 +13,8 @@ export const MainNavLinks = [
         Url: "/appointmentListing"
     },
     {
-        Name: "News",
-        Url: "/"
+        Name: "Order completion",
+        Url: "/orderCompletion"
     },
     {
         Name: "Contact Terminal",

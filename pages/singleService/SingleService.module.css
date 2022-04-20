@@ -12,18 +12,7 @@
     height: auto;
     align-self: center;
 }
-.title__striped {
-    position: relative;
-}
-.title__striped div {
-    pointer-events: none;
-    position: absolute;
-    left: 269px;
-}
-.title__striped svg {
-    transform: scale(3);
-    opacity: 0.1;
-}
+
 .content__wrapper {
     display: flex;
     flex-wrap: nowrap;
@@ -36,7 +25,7 @@
     margin-bottom: 28px;
 }
 .content button {
-    margin: 40px 0;
+    margin: 20px 0 35px;
 }
 .content__side {
     width: var(--unit-three-quarter);

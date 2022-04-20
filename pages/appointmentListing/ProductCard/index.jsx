@@ -90,7 +90,7 @@ const OcProductCard = ({ worksheet, product }) => {
               </Link>
             ) : (
               <Link href={`/appointmentListing/${worksheetId}`}>
-                <a className="btn">Add details</a>
+                <a className="btn btn--secondary">Add details</a>
               </Link>
             )}
           </>

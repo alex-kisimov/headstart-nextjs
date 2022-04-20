@@ -189,7 +189,7 @@ const OrderPage: FunctionComponent = () => {
           </fieldset>
         </div>
 
-        <button type="submit" className="btn">
+        <button type="submit" className="btn btn--secondary">
           Add details
         </button>
       </form>

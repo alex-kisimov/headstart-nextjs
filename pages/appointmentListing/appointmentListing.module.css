@@ -35,4 +35,5 @@ button.active {
 .errorText {
     max-width: 495px;
     margin-top: 30px;
+    text-align: center;
 }

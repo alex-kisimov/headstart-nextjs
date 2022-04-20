@@ -238,6 +238,9 @@ button:focus {
   border: 1px solid #FF6441;
   cursor: pointer;
 }
+.btn--secondary {
+  background-color: #ffffff;
+}
 
 /* lists */
 ul {

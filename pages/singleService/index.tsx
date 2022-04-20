@@ -6,28 +6,12 @@ import OcLineItemList from '../../ordercloud/components/OcLineItemList'
 import { deleteCurrentOrder } from '../../ordercloud/redux/ocCurrentOrder'
 // import useOcProductList from '../hooks/useOcProductList'
 import useOcProductList from '../../ordercloud/hooks/useOcProductList'
-import { useOcDispatch } from '../../ordercloud/redux/ocStore'
+
 import styles from './SingleService.module.css'
 import { useRouter } from 'next/router'
 
 import { OcProductListOptions } from '../../ordercloud/redux/ocProductList'
-import {
-  BuyerAddress,
-  Address,
-  LineItem,
-  LineItems,
-  Me,
-  Order,
-  Orders,
-  ShipEstimateResponse,
-  IntegrationEvents,
-  RequiredDeep,
-  ShipMethodSelection,
-  OrderWorksheet,
-  Payment,
-  Payments,
-} from 'ordercloud-javascript-sdk'
-import router from 'next/router'
+import { LineItems, Orders } from 'ordercloud-javascript-sdk'
 
 export interface OcProductListProps {
   options?: OcProductListOptions
@@ -63,29 +47,29 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) =
 
   const onLineItemChange = (e) => {
     console.log(e.currentTarget.options[e.currentTarget.selectedIndex].dataset.supplier)
-    const { orderId } = e.currentTarget.dataset
-    const { valueType } = e.currentTarget.dataset
-    const supplierId = e.currentTarget.options[e.currentTarget.selectedIndex].dataset.supplier
-    const newOrdersLineItems = { ...ordersLineItems }
+    const { orderId } = e.currentTarget.dataset;
+    const { valueType } = e.currentTarget.dataset;
+    const supplierId = e.currentTarget.options[e.currentTarget.selectedIndex].dataset.supplier;
+    const newOrdersLineItems = { ...ordersLineItems };
 
     if (typeof newOrdersLineItems[orderId] === 'undefined') {
-      newOrdersLineItems[orderId] = {}
+      newOrdersLineItems[orderId] = {};
     }
 
-    newOrdersLineItems[orderId][valueType] = e.currentTarget.value
-    newOrdersLineItems[orderId].supplierId = supplierId
+    newOrdersLineItems[orderId][valueType] = e.currentTarget.value;
+    newOrdersLineItems[orderId].supplierId = supplierId;
 
     setOrdersLineItems(newOrdersLineItems)
   }
 
   const addRow = () => {
-    const newRows = [...rows]
+    const newRows = [...rows];
 
     newRows.push({
       orderId: generateUUID(),
     })
 
-    setRows(newRows)
+    setRows(newRows);
   };
 
   const removeRow = () => {
@@ -94,16 +78,20 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) =
     setRows(newRows);
   };
 
-
   const onFormSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const orders = []
 
     console.log(ordersLineItems)
+
     for (const [orderId, value] of Object.entries(ordersLineItems)) {
       const valueType: any = value;
       console.log(valueType)
-      await Orders.Create("Outgoing", { ID: orderId, ToCompanyID: valueType.supplierId }).then(() => {
+      
+      Orders.Create("Outgoing", { 
+        ID: orderId, 
+        ToCompanyID: valueType.supplierId 
+      }).then(() => {
         LineItems.Create("Outgoing", orderId, {
           ProductID: valueType.lineItemId,
           Quantity: 1
@@ -117,10 +105,8 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) =
       orders.push(orderId)
     }
 
-    // window.localStorage.setItem("orders", JSON.stringify(orders))
-
     router.push("/appointmentListing")
-  }
+  };
 
   if (!products) {
     return null
@@ -207,25 +193,32 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) =
           <form onSubmit={onFormSubmit} className={styles.request_form}>
             {rows.map((row, i) => {
               return (
-                  <div key={row.orderId} className={styles.selectWrapper}>
-                    {i === 0 ? <label htmlFor="services">Services</label> : <button type="button" className={styles.request_remove_button} onClick={removeRow}></button>}
-                    <select
-                      id="services"
-                      className={styles.request_select}
-                      data-order-id={row.orderId}
-                      data-value-type="lineItemId"
-                      onChange={onLineItemChange}
-                    >
-                      <option>Please select</option>
-                      {products.map((product) => {
-                        return (
-                          <option key={product.ID} data-id={product.ID} value={product.ID} data-supplier={product.DefaultSupplierID}>
-                            {product.Name}
-                          </option>
-                        )
-                      })}
-                    </select>
+                <div key={row.orderId} className={styles.selectWrapper}>
+                  {i === 0 ? (
+                    <label htmlFor="services">Services</label>
+                  ) : (
+                    <button type="button" className={styles.request_remove_button} onClick={removeRow}></button>
+                  )}
+                  <select
+                    id="services"
+                    className={styles.request_select}
+                    data-order-id={row.orderId}
+                    data-value-type="lineItemId"
+                    onChange={onLineItemChange}
+                  >
+                    <option>Please select</option>
+                    {products.map((product) => {
+                      return (
+                        <option key={product.ID} data-id={product.ID} value={product.ID} data-supplier={product.DefaultSupplierID}>
+                          {product.Name}
+                        </option>
+                      )
+                    })}
+                  </select>
+                  <div className={styles.quantityWrapper}>
+                    <input name="quantity" defaultValue="1" type="number" min="1" />
                   </div>
+                </div>
               )
             })}
             <div className={styles.stepper_button_wrapper}>

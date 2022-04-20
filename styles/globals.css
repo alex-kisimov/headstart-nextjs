@@ -189,15 +189,10 @@ input[type="password"] {
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 32px;
-  overflow: hidden;
 }
 
-main .wrapper {
-  padding-top: 43px;
-}
-
-main {
-  padding-bottom: 50px;
+.page-container {
+  padding: 100px 0 0;
 }
 
 /* links */
@@ -380,6 +375,26 @@ h6,
     font-family: var(--maersk-bold);
     font-size: 1.4rem;
     line-height: 2.2rem;
+}
+
+/* title */
+
+.title-striped {
+  position: relative;
+}
+
+.title-striped  h1 {
+  margin-bottom: 10px;
+}
+
+.title-striped div {
+  pointer-events: none;
+  position: absolute;
+  left: 269px;
+}
+.title-striped svg {
+  transform: scale(3);
+  opacity: 0.1;
 }
 
 .module-heading {

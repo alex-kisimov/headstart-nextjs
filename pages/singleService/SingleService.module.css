@@ -6,24 +6,12 @@
     display: flex;
     overflow: hidden;
     max-height: 280px;
-    margin-bottom: 100px;
 }
 .hero {
     height: auto;
     align-self: center;
 }
-.title__striped {
-    position: relative;
-}
-.title__striped div {
-    pointer-events: none;
-    position: absolute;
-    left: 269px;
-}
-.title__striped svg {
-    transform: scale(3);
-    opacity: 0.1;
-}
+
 .content__wrapper {
     display: flex;
     flex-wrap: nowrap;
@@ -36,7 +24,7 @@
     margin-bottom: 28px;
 }
 .content button {
-    margin: 40px 0;
+    margin: 20px 0 35px;
 }
 .content__side {
     width: var(--unit-three-quarter);
@@ -83,17 +71,16 @@
 }
 
 .request__container {
+    padding: 50px 0;
     background-color:rgba(245, 247, 250, 1);
 }
 .request {
-    display: flex;
-    align-items: flex-start;
-    flex-direction: column;
     max-width: 650px;
-    margin: 70px auto 0;
+    margin: 0 auto;
 }
 .request_title {
-    margin: 50px auto 30px auto;
+    margin-bottom: 30px;
+    text-align: center;
 }
 .request_form {
     width: 100%;

@@ -12,7 +12,7 @@ const Layout: FunctionComponent = ({ children }) => {
       </Head>
       <Header/>
       <main>
-        <div className="wrapper">{children}</div>
+        {children}
       </main>
       <Footer />
     </>

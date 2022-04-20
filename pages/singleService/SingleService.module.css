@@ -104,6 +104,21 @@
 .request_form * {
     margin-bottom: 20px;
 }
+.request_form div {
+    position: relative;
+}
+.request_remove_button {
+    position: absolute;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    background: url('/images/remove_off.svg');
+    top: 3px;
+    left: -50px;
+}
+.request_remove_button:hover {
+    background: url('/images/remove_on.svg');
+}
 .stepper {
     display: flex;
     align-items: center;

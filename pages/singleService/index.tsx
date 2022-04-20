@@ -83,7 +83,13 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ( { options }) 
     })
 
     setRows(newRows)
-  }
+  };
+
+  const removeRow = () => {
+    const newRows = [...rows];
+    newRows.pop();
+    setRows(newRows);
+  };
 
 
   const onFormSubmit = async (e) => {
@@ -158,8 +164,8 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ( { options }) 
               </p>
               <div className={styles.download__button_wrapper}>
                 <div className={styles.download__button}>
-                  <img src="/dlbtn_on.svg" alt=""/>
-                  <img src="/dlbtn_off.svg" alt=""/>
+                  <img src="/images/dlbtn_off.svg" alt=""/>
+                  <img src="/images/dlbtn_on.svg" alt=""/>
                 </div>
                 <span className={styles.download__button_text}>Download 2022 tariffs</span>
               </div>
@@ -172,10 +178,10 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ( { options }) 
               </p>
               <div className={styles.download__button_wrapper}>
                 <div className={styles.download__button}>
-                  <img src="/dlbtn_on.svg" alt=""/>
-                  <img src="/dlbtn_off.svg" alt=""/>
+                  <img src="/images/contact_off.svg" alt=""/>
+                  <img src="/images/contact_on.svg" alt=""/>
                 </div>
-                <span className={styles.download__button_text}>Download 2022 tariffs</span>
+                <span className={styles.download__button_text}>Contact</span>
               </div>
             </div>
           </div>
@@ -198,7 +204,7 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ( { options }) 
             {rows.map((row, i) => {
               return (
                   <div key={row.orderId} className={styles.selectWrapper}>
-                    {i === 0 && <label htmlFor="services">Services</label>}
+                    {i === 0 ? <label htmlFor="services">Services</label> : <button type="button" className={styles.request_remove_button} onClick={removeRow}></button>}
                     <select
                       id="services"
                       className={styles.request_select}

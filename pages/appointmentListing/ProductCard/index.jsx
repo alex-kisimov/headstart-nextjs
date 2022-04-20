@@ -1,5 +1,3 @@
-import { BuyerProduct } from 'ordercloud-javascript-sdk'
-import { FunctionComponent } from 'react'
 import Link from 'next/link'
 import formatPrice from '../../../ordercloud/utils/formatPrice'
 import styles from './ProductCard.module.css'
@@ -10,10 +8,10 @@ import ViewIcon from './icons/view-icon'
 import RemoveIcon from './icons/remove-icon'
 
 const OcProductCard = ({ worksheet, product }) => {
-  const promotionDiscount = worksheet?.LineItems[0]?.PromotionDiscount
-  const hasPromotion = promotionDiscount !== 0
-  const worksheetId = worksheet?.Order?.ID
-  const isSubmitted = worksheet?.Order.IsSubmitted
+  const promotionDiscount = worksheet?.LineItems[0]?.LineTotal;
+  const hasPromotion = worksheet?.LineItems[0]?.PromotionDiscount !== 0;
+  const worksheetId = worksheet?.Order?.ID;
+  const isSubmitted = worksheet?.Order.IsSubmitted;
 
   if (!product) {
     return null

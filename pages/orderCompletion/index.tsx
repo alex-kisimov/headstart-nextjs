@@ -38,7 +38,6 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                     setShowLoader(false)
 
                     orders.forEach((order, i) => {
-                        console.log(i)
                         orders[i]['LineItems'] = lineItems[i].Items
                     })
 

@@ -7,7 +7,7 @@ import { useOcSelector } from '../../ordercloud/redux/ocStore';
 import Loader from '../../components/Helpers/Loader';
 
 import { OcProductListOptions } from '../../ordercloud/redux/ocProductList';
-import { Me, Orders, IntegrationEvents, Tokens } from 'ordercloud-javascript-sdk';
+import { Me, Orders, IntegrationEvents, Tokens, LineItems } from 'ordercloud-javascript-sdk';
 
 export interface OcProductListProps {
     options?: OcProductListOptions
@@ -22,19 +22,33 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
 
     const getAllOrders = () => {
         const token = Tokens.GetAccessToken()
+        const requests = []
 
         if (token) {
             setShowLoader(true)
 
             Orders.List('Incoming', { sortBy: ['!LastUpdated'] }).then((response) => {
-                setShowLoader(false)
-                setOrders(response.Items)
+                let orders = response.Items;
+
+                response.Items.forEach(order => {
+                    requests.push(LineItems.List('Incoming', order.ID))
+                });
+
+                Promise.all(requests).then((lineItems) => {
+                    setShowLoader(false)
+
+                    orders.forEach((order, i) => {
+                        console.log(i)
+                        orders[i]['LineItems'] = lineItems[i].Items
+                    })
+
+                    setOrders(orders)
+                })
             });
         }
     }
 
     const completeOrder = (e) => {
-        console.log(e.currentTarget.dataset.orderid)
         Orders.Complete('Incoming', e.currentTarget.dataset.orderid).then((response) => {
             console.log(response)
         })
@@ -54,20 +68,37 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                 {!showLoader && (
                     <>
                         {orders.map((order, i) => {
-                            console.log(order)
                             return (
                                 <div key={i}>
                                     <hr />
-                                    Raised by:
+                                    Created by User: {order.FromUser.Username}                                    
                                     <br />
                                     Company: {order.FromCompanyID}
                                     <br />
-                                    User: {order.FromUser.Username}
-                                    <br/>
+                                    Date submitted: {order.DateSubmitted}
+                                    {order.LineItems.map((lineItem, lineItemIndex) => {
+                                        console.log(lineItem.xp)
+                                        return (
+                                            <div key={lineItemIndex}>
+                                                <br />
+                                                Service: {lineItem.Product.Name}
+                                                <br />
+                                                Service details: 
+                                                <ul>
+                                                    <li>Width: {lineItem?.xp?.CargoWidth}</li>
+                                                    <li>Height: {lineItem?.xp?.CargoHeight}</li>
+                                                    <li>Lnegth: {lineItem?.xp?.CargoLenght}</li>
+                                                    <li>Weight: {lineItem?.xp?.CargoWeight}</li>
+                                                </ul>
+                                                <br />
+                                            </div>
+                                        )
+                                    })}
+                                    Total: {order.Total}
+                                    <br />
                                     {order.Status !== 'Completed' && (
                                         <button className="btn" data-orderid={order.ID} onClick={completeOrder}>Complete</button>
                                     )}
-                                    
                                     {order.Status === 'Completed' && (
                                         <div>Order completed</div>
                                     )}

@@ -1,20 +1,31 @@
-import Link from 'next/link'
-import formatPrice from '../../../ordercloud/utils/formatPrice'
-import styles from './ProductCard.module.css'
-import TickIcon from './icons/tick-icon'
-import ArrowIcon from './icons/arrow-icon'
-import ContactIcon from './icons/contact-icon'
-import ViewIcon from './icons/view-icon'
-import RemoveIcon from './icons/remove-icon'
+import { useState } from 'react';
+import Link from 'next/link';
+import { Orders } from 'ordercloud-javascript-sdk';
+import formatPrice from '../../../ordercloud/utils/formatPrice';
+import styles from './ProductCard.module.css';
+import TickIcon from './icons/tick-icon';
+import ArrowIcon from './icons/arrow-icon';
+import ContactIcon from './icons/contact-icon';
+import ViewIcon from './icons/view-icon';
+import RemoveIcon from './icons/remove-icon';
 
 const OcProductCard = ({ worksheet, product }) => {
   const promotionDiscount = worksheet?.LineItems[0]?.LineTotal;
   const hasPromotion = worksheet?.LineItems[0]?.PromotionDiscount !== 0;
   const worksheetId = worksheet?.Order?.ID;
   const isSubmitted = worksheet?.Order.IsSubmitted;
+  const [isRemoved, toRemove] = useState(false);
 
-  if (!product) {
-    return null
+  const removeCard = () => {
+    Orders.Delete("Outgoing", worksheetId).then(() => {
+      toRemove(true);
+    }).catch(() => {
+      console.error(`Error removing worksheet ${worksheetId}`)
+    });
+  };
+
+  if (!product || isRemoved) {
+    return null;
   }
 
   return (
@@ -39,7 +50,6 @@ const OcProductCard = ({ worksheet, product }) => {
           </div>
         )}
       </div>
-
       <div className={styles.bottom}>
         <ul className={styles.icons}>
           <li className={styles.iconItem}>
@@ -48,9 +58,13 @@ const OcProductCard = ({ worksheet, product }) => {
           <li className={styles.iconItem}>
             <ViewIcon customClass={undefined} />
           </li>
-          <li className={styles.iconItem}>
-            <RemoveIcon customClass={undefined} />
-          </li>
+          {!isSubmitted && (
+            <li className={styles.iconItem}>
+              <button type="button" onClick={removeCard} title="Remove">
+                <RemoveIcon customClass={undefined} />
+              </button>
+            </li>
+          )}
         </ul>
         {isSubmitted ? (
           <ul className={styles.list}>
@@ -79,7 +93,6 @@ const OcProductCard = ({ worksheet, product }) => {
             </li>
           </ul>
         )}
-
         {!isSubmitted && (
           <>
             {hasPromotion ? (
@@ -98,4 +111,4 @@ const OcProductCard = ({ worksheet, product }) => {
   )
 }
 
-export default OcProductCard
+export default OcProductCard;

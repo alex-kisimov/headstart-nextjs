@@ -53,59 +53,75 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
         })
     }
 
+    const cancelOrder = (e) => {
+        Orders.Cancel('Incoming', e.currentTarget.dataset.orderid).then((response) => {
+            console.log(response)
+        })
+    }
+
     useEffect(() => {
         getAllOrders()
     }, [storeToken])
 
     return (
         <div>
-            <h1 className={styles.title}>Service Enquiries</h1>
-            <div className={styles.results}>
-                {showLoader && (
-                    <div className={styles.loader}><Loader /></div>
-                )}
-                {!showLoader && (
-                    <>
-                        {orders.map((order, i) => {
-                            return (
-                                <div key={i}>
-                                    <hr />
-                                    Created by User: {order.FromUser.Username}                                    
-                                    <br />
-                                    Company: {order.FromCompanyID}
-                                    <br />
-                                    Date submitted: {order.DateSubmitted}
-                                    {order.LineItems.map((lineItem, lineItemIndex) => {
-                                        console.log(lineItem.xp)
-                                        return (
-                                            <div key={lineItemIndex}>
-                                                <br />
-                                                Service: {lineItem.Product.Name}
-                                                <br />
-                                                Service details: 
-                                                <ul>
-                                                    <li>Width: {lineItem?.xp?.CargoWidth}</li>
-                                                    <li>Height: {lineItem?.xp?.CargoHeight}</li>
-                                                    <li>Lnegth: {lineItem?.xp?.CargoLenght}</li>
-                                                    <li>Weight: {lineItem?.xp?.CargoWeight}</li>
-                                                </ul>
-                                                <br />
+            <div className="wrapper">
+                <h1 className={styles.title}>Service Enquiries</h1>
+                <div className={styles.results}>
+                    {showLoader && (
+                        <div className={styles.loader}><Loader /></div>
+                    )}
+                    {!showLoader && (
+                        <>
+                            {orders.map((order, i) => {
+                                return (
+                                    <div key={i}>
+                                        <hr />
+                                        Created by User: {order.FromUser.Username}
+                                        <br />
+                                        Company: {order.FromCompanyID}
+                                        <br />
+                                        Date submitted: {order.DateSubmitted}
+                                        {order.LineItems.map((lineItem, lineItemIndex) => {
+                                            return (
+                                                <div key={lineItemIndex}>
+                                                    <br />
+                                                    Service: {lineItem.Product.Name}
+                                                    <br />
+                                                    Service details:
+                                                    <ul>
+                                                        <li>Width: {lineItem?.xp?.CargoWidth}</li>
+                                                        <li>Height: {lineItem?.xp?.CargoHeight}</li>
+                                                        <li>Lnegth: {lineItem?.xp?.CargoLenght}</li>
+                                                        <li>Weight: {lineItem?.xp?.CargoWeight}</li>
+                                                    </ul>
+                                                    <br />
+                                                </div>
+                                            )
+                                        })}
+                                        Total: {order.Total}
+                                        <br />
+                                        {order?.xp?.RequestToCancel && (order.Status !== 'Completed' && order.Status !== 'Canceled') && (
+                                            <div>
+                                                <p>User has requested cancellation of this service</p>
+                                                <button type="button" className="btn btn--secondary" data-orderid={order.ID} onClick={cancelOrder}>Cancel</button>
                                             </div>
-                                        )
-                                    })}
-                                    Total: {order.Total}
-                                    <br />
-                                    {order.Status !== 'Completed' && (
-                                        <button className="btn" data-orderid={order.ID} onClick={completeOrder}>Complete</button>
-                                    )}
-                                    {order.Status === 'Completed' && (
-                                        <div>Order completed</div>
-                                    )}
-                                </div>
-                            )
-                        })}
-                    </>
-                )}
+                                        )}
+                                        {(order.Status !== 'Completed' && order.Status !== 'Canceled') && (
+                                            <button className="btn" data-orderid={order.ID} onClick={completeOrder}>Complete</button>
+                                        )}
+                                        {order.Status === 'Completed' && (
+                                            <div>Order completed</div>
+                                        )}
+                                        {order.Status === 'Canceled' && (
+                                            <div className={styles.cancelled}>Order cancelled</div>
+                                        )}
+                                    </div>
+                                )
+                            })}
+                        </>
+                    )}
+                </div>
             </div>
         </div>
     )

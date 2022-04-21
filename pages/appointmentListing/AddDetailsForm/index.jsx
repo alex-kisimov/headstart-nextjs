@@ -20,13 +20,6 @@ const AddDetailsForm = ({ addDetailForms, lineItem, itemIndex }) => {
       </div>
 
       <div className={styles.row}>
-        <div className={styles.colHalf}>
-          <label htmlFor="description">Goods description</label>
-          <input id="description" type="text" placeholder="Enter Details" />
-        </div>
-      </div>
-
-      <div className={styles.row}>
         <div className={styles.col}>
           <label htmlFor="length">Add length</label>
           <input name="length" required id="length" type="text" placeholder="Length" />
@@ -54,52 +47,6 @@ const AddDetailsForm = ({ addDetailForms, lineItem, itemIndex }) => {
           <label htmlFor="location">Cargo location</label>
           <input id="location" type="text" placeholder="Enter Details" />
         </div>
-      </div>
-
-      <div className={styles.colHalf}>
-        <label htmlFor="operation">Type of operation</label>
-        <input id="operation" type="text" placeholder="Enter Details" />
-      </div>
-      <div className={styles.radioContainer}>
-        <p>Does it have a cradle?</p>
-        <fieldset className={styles.radio}>
-          <label>
-            <input type="radio" name="cradleHave" value="Yes" />
-            Yes
-          </label>
-          <label>
-            <input type="radio" name="cradleHave" value="No" />
-            No
-          </label>
-        </fieldset>
-      </div>
-
-      <div className={styles.radioContainer}>
-        <p>Does it need a cradle?</p>
-        <fieldset className={styles.radio}>
-          <label>
-            <input type="radio" name="cradleNeed" value="Yes" />
-            Yes
-          </label>
-          <label>
-            <input type="radio" name="cradleNeed" value="No" />
-            No
-          </label>
-        </fieldset>
-      </div>
-
-      <div className={styles.radioContainer}>
-        <p>Storage needed?</p>
-        <fieldset className={styles.radio}>
-          <label>
-            <input type="radio" name="storage" value="Yes" />
-            Yes
-          </label>
-          <label>
-            <input type="radio" name="storage" value="No" />
-            No
-          </label>
-        </fieldset>
       </div>
     </form>
   )

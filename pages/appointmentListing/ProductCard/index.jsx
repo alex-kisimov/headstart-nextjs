@@ -11,6 +11,7 @@ import RemoveIcon from './icons/remove-icon';
 
 const OcProductCard = ({ worksheet, product }) => {
   const promotionDiscount = worksheet?.LineItems[0]?.LineTotal;
+  const orderTotal = worksheet?.Order?.Total;
   const hasPromotion = worksheet?.LineItems[0]?.PromotionDiscount !== 0;
   const worksheetId = worksheet?.Order?.ID;
   const isSubmitted = worksheet?.Order.IsSubmitted;
@@ -30,13 +31,29 @@ const OcProductCard = ({ worksheet, product }) => {
 
   return (
     <div className={`${styles.container} ${isSubmitted ? styles.submitted : ''}`}>
-      <p className={styles.name}>{product.Name}</p>
+      <div className={styles.title}>
+        <p className={styles.name}>{product.Name}</p>
+        <div className={styles.quantity}>
+          <p>
+            Quantity: <span className={styles.amount}>{worksheet.LineItems.length}</span>
+          </p>
+          <Link href={`/appointmentListing/${worksheet.Order.ID}`}>
+            <a className={styles.edit}>
+              <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <g fill="#FF6441" fillRule="evenodd">
+                  <path d="M13.523 1.546 2.917 12.153l-.529 3.71 3.71-.528L16.706 4.728l-3.182-3.182zm0 2.122 1.06 1.06-9.191 9.192-1.238.177.176-1.237 9.193-9.192zM9 15h9v1H9z" />
+                </g>
+              </svg>
+            </a>
+          </Link>
+        </div>
+      </div>
       <div className={styles.middle}>
         <p className={styles.description}>{product.Description}</p>
         {hasPromotion && (
           <div className={styles.pricecontainer}>
             <span>Estimated cost</span>{' '}
-            <span className={styles.price}>{formatPrice(promotionDiscount)}</span>
+            <span className={styles.price}>{formatPrice(orderTotal)}</span>
           </div>
         )}
         {product.PriceSchedule?.PriceBreaks[0].Price && !hasPromotion && (

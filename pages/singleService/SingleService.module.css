@@ -154,14 +154,24 @@
 
 .selectWrapper {
     flex: 1;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
-.selectWrapper select {
+
+.selectWrapper label {
     width: 100%;
+}
+
+.selectWrapper select {
+    width: calc(100% - 70px);
 }
 
 .quantityWrapper {
     max-width: 50px;
+    display: flex;
 }
+
 .quantityWrapper input {
     width: 100%;
 }

@@ -26,6 +26,7 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
     const readyToSend = useRef(0)
     const sentRequests = useRef(0);
     const requestedToCancel = useRef(0);
+    const cancelledRequests = useRef(0);
 
     const resolvePromises = (requests) => {
         Promise.all(requests).then((worksheetsResponse) => {
@@ -53,18 +54,27 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
         if (token) {
             setShowLoader(true)
 
-            Me.ListOrders({ sortBy: ['!LastUpdated'], filters: { Status: 'Open' } }).then((responseOpen) => {
-                const allSentRequests = responseOpen.Items.filter((order) => !order.xp?.RequestToCancel);
+            // Me.ListOrders({sortBy: ['!LastUpdated']}).then((responseOpen) => {
+            //     console.log(responseOpen)
+            // });
+
+            Me.ListOrders({ sortBy: ['!LastUpdated'] }).then((response) => {
+                const allSentRequests = response.Items.filter((order) => !order.xp?.RequestToCancel);
                 sentRequests.current = allSentRequests.length;
 
                 Me.ListOrders({ sortBy: ['!LastUpdated'], filters: { Status: 'Unsubmitted' } }).then((responseUnsubmitted) => {
                     let requireDetailsCount = 0;
                     let readyToSendCount = 0;
                     let requestToCancel = 0;
+                    let cancelledRequest = 0;
 
-                    responseOpen.Items.forEach(order => {
-                        if (order.xp?.RequestToCancel) {
+                    response.Items.forEach(order => {
+                        if (order.xp?.RequestToCancel && order.Status === "Open") {
                             requestToCancel += 1;
+                        }
+
+                        if (order.Status === "Canceled") {
+                            cancelledRequest += 1;
                         }
 
                         requests.push(IntegrationEvents.GetWorksheet('Outgoing', order.ID))
@@ -84,6 +94,7 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                     requireDetails.current = requireDetailsCount;
                     requestedToCancel.current = requestToCancel;
                     allOrders.current = requests.length;
+                    cancelledRequests.current = cancelledRequest;
 
                     resolvePromises(requests);
                 })
@@ -167,6 +178,24 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
         }
     }
 
+    const getCancelled = () => {
+        const token = Tokens.GetAccessToken()
+        const requests = []
+
+        if (token) {
+            setShowLoader(true)
+
+            Me.ListOrders({ sortBy: ['!LastUpdated'], filters: { Status: 'Canceled' } }).then((responseCanceled) => {
+                console.log()
+                responseCanceled.Items.forEach(order => {
+                    requests.push(IntegrationEvents.GetWorksheet('Outgoing', order.ID))
+                });
+
+                resolvePromises(requests);
+            })
+        }
+    }
+
     const showAll = () => {
         setActiveTab('all')
         getAllProducts()
@@ -190,6 +219,11 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
     const showCancellationPending = () => {
         setActiveTab('requestCancel')
         getCancellationPending()
+    }
+
+    const showCancelled = () => {
+        setActiveTab('cancelled')
+        getCancelled()
     }
 
     useEffect(() => {
@@ -223,6 +257,9 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                 </li>
                 <li>
                     <button disabled={requestedToCancel.current === 0 || activeTab === 'requestCancel'} className={activeTab === 'requestCancel' ? styles.active : ''} type="button" onClick={showCancellationPending}>Cancellation Pending ({requestedToCancel.current})</button>
+                </li>
+                <li>
+                    <button disabled={cancelledRequests.current === 0 || activeTab === 'cancelled'} className={activeTab === 'cancelled' ? styles.active : ''} type="button" onClick={showCancelled}>Cancelled ({cancelledRequests.current})</button>
                 </li>
             </ul>
             <div className={styles.results}>

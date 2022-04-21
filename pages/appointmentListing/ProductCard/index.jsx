@@ -14,7 +14,8 @@ const OcProductCard = ({ worksheet, product }) => {
   const orderTotal = worksheet?.Order?.Total;
   const hasPromotion = worksheet?.LineItems[0]?.PromotionDiscount !== 0;
   const worksheetId = worksheet?.Order?.ID;
-  const isSubmitted = worksheet?.Order.IsSubmitted;
+  const isSubmitted = worksheet?.Order.Status === "Open";
+  const isCancelled = worksheet?.Order.Status === "Canceled";
   const [isRemoved, toRemove] = useState(false);
   const [isRequestCancel, setIsRequestCancel] = useState(worksheet?.Order?.xp?.RequestToCancel || false);
 
@@ -41,7 +42,7 @@ const OcProductCard = ({ worksheet, product }) => {
   }
 
   return (
-    <div className={`${styles.container} ${isRequestCancel ? styles.pending : ''} ${isSubmitted ? styles.submitted : ''}`}>
+    <div className={`${styles.container} ${(isRequestCancel && !isCancelled) ? styles.pending : ''} ${isCancelled ? styles.cancelledCard : ''} ${isSubmitted ? styles.submitted : ''}`}>
       <div className={styles.title}>
         <p className={styles.name}>{product.Name}</p>
         <div className={styles.quantity}>
@@ -50,7 +51,7 @@ const OcProductCard = ({ worksheet, product }) => {
               Quantity: <span className={styles.amount}>{worksheet?.LineItems.length}</span>
             </p>
           )}
-          {!isSubmitted && (
+          {(!isSubmitted && !isCancelled) && (
             <Link href={`/appointmentListing/${worksheet?.Order.ID}`}>
               <a className={styles.edit}>
                 <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -90,7 +91,7 @@ const OcProductCard = ({ worksheet, product }) => {
           <li className={styles.iconItem}>
             <ViewIcon customClass={undefined} />
           </li>
-          {!isSubmitted && (
+          {(!isSubmitted && !isCancelled) && (
             <li className={styles.iconItem}>
               <button type="button" className={styles.removeBtn} onClick={removeCard} title="Remove">
                 <RemoveIcon customClass={undefined} />
@@ -98,7 +99,7 @@ const OcProductCard = ({ worksheet, product }) => {
             </li>
           )}
         </ul>
-        {(isSubmitted && !isRequestCancel) && (
+        {(isSubmitted && !isRequestCancel && !isCancelled) && (
           <ul className={styles.list}>
             <li className={styles.item}>
               <button onClick={requestCancellation} type="button" className="btn btn--secondary">
@@ -112,14 +113,20 @@ const OcProductCard = ({ worksheet, product }) => {
           </ul>
         )}
 
-        {isRequestCancel && (
+        {isCancelled && (
+          <li className={`${styles.item} ${styles.cancelled}`}>
+            Cancelled
+          </li>
+        )}
+
+        {(isRequestCancel && !isCancelled)  && (
           <li className={`${styles.item} ${styles.pendingCancel}`}>
             <RemoveIcon customClass={styles.svg} />
             Cancellation pending
           </li>
         )}
 
-        {!isSubmitted && (
+        {(!isSubmitted && !isCancelled) && (
           <ul className={styles.list}>
             <li className={styles.item}>
               <TickIcon customClass={styles.svg} />
@@ -139,7 +146,7 @@ const OcProductCard = ({ worksheet, product }) => {
             </li>
           </ul>
         )}
-        {!isSubmitted && (
+        {(!isSubmitted && !isCancelled) && (
           <>
             {hasPromotion ? (
               <Link href={`/sendRequest/${worksheetId}`}>

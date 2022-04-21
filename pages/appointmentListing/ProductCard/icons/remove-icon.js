@@ -1,6 +1,7 @@
 const RemoveIcon = ({ customClass }) => {
   return (
     <svg
+      className={customClass}
       width="32px"
       height="32px"
       viewBox="0 0 32 32"

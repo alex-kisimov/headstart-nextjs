@@ -62,11 +62,10 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) =
   const products = useOcProductList(options)
 
   const onLineItemChange = (e) => {
-    console.log(e.currentTarget.options[e.currentTarget.selectedIndex].dataset.supplier)
-    const { orderId } = e.currentTarget.dataset
-    const { valueType } = e.currentTarget.dataset
-    const supplierId = e.currentTarget.options[e.currentTarget.selectedIndex].dataset.supplier
-    const newOrdersLineItems = { ...ordersLineItems }
+    const { orderId } = e.currentTarget.dataset;
+    const { valueType } = e.currentTarget.dataset;
+    const supplierId = e.currentTarget.options[e.currentTarget.selectedIndex].dataset.supplier;
+    const newOrdersLineItems = { ...ordersLineItems };
 
     if (typeof newOrdersLineItems[orderId] === 'undefined') {
       newOrdersLineItems[orderId] = {}
@@ -94,12 +93,10 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) =
     setRows(newRows);
   };
 
-
   const onFormSubmit = async (e) => {
     e.preventDefault()
     const orders = []
 
-    console.log(ordersLineItems)
     for (const [orderId, value] of Object.entries(ordersLineItems)) {
       const valueType: any = value;
       console.log(valueType)
@@ -107,17 +104,10 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) =
         LineItems.Create("Outgoing", orderId, {
           ProductID: valueType.lineItemId,
           Quantity: 1
-        }).then((order) => {
-          //IntegrationEvents.GetWorksheet('Outgoing', orderId)
-          // Orders.Save("Outgoing", orderId, order).then(() => {
-          //   getOrders()
-          // })
         })
       })
       orders.push(orderId)
     }
-
-    // window.localStorage.setItem("orders", JSON.stringify(orders))
 
     router.push("/appointmentListing")
   }
@@ -241,4 +231,4 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) =
   )
 }
 
-export default SingleServicePage
+export default SingleServicePage;

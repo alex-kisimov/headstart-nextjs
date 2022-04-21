@@ -10,17 +10,29 @@ import ViewIcon from './icons/view-icon';
 import RemoveIcon from './icons/remove-icon';
 
 const OcProductCard = ({ worksheet, product }) => {
-  const promotionDiscount = worksheet?.LineItems[0]?.LineTotal;
-  const hasPromotion = worksheet?.LineItems[0]?.PromotionDiscount !== 0;
+  const lineItem = worksheet?.LineItems[0];
+  const promotionDiscount = lineItem?.LineTotal;
+  const hasPromotion = lineItem?.PromotionDiscount !== 0;
   const worksheetId = worksheet?.Order?.ID;
   const isSubmitted = worksheet?.Order.IsSubmitted;
   const [isRemoved, toRemove] = useState(false);
+  const [isRequestCancel, setIsRequestCancel] = useState(worksheet?.Order?.xp?.RequestToCancel || false);
 
   const removeCard = () => {
     Orders.Delete("Outgoing", worksheetId).then(() => {
       toRemove(true);
     }).catch(() => {
       console.error(`Error removing worksheet ${worksheetId}`);
+    });
+  };
+
+  const requestCancellation = () => {
+    Orders.Patch('Outgoing', worksheetId, { 
+      xp: {
+        RequestToCancel: true
+      },
+    }).then(() => {
+      setIsRequestCancel(true);
     });
   };
 
@@ -60,20 +72,34 @@ const OcProductCard = ({ worksheet, product }) => {
           </li>
           {!isSubmitted && (
             <li className={styles.iconItem}>
-              <button type="button" onClick={removeCard} title="Remove">
+              <button type="button" className={styles.removeBtn} onClick={removeCard} title="Remove">
                 <RemoveIcon customClass={undefined} />
               </button>
             </li>
           )}
         </ul>
-        {isSubmitted ? (
+        {(isSubmitted && !isRequestCancel) && (
           <ul className={styles.list}>
+            <li className={styles.item}>
+              <button onClick={requestCancellation} type="button" className="btn btn--secondary">
+                Request cancellation
+              </button>
+            </li>
             <li className={`${styles.item} ${isSubmitted ? styles.submittedIcon : ''}`}>
               <TickIcon customClass={styles.svg} />
               Sent to terminal
             </li>
           </ul>
-        ) : (
+        )}
+
+        {isRequestCancel && (
+          <li className={`${styles.item} ${styles.pendingCancel}`}>
+            <RemoveIcon customClass={styles.svg} />
+            Cancellation pending
+          </li>
+        )}
+
+        {!isSubmitted && (
           <ul className={styles.list}>
             <li className={styles.item}>
               <TickIcon customClass={styles.svg} />

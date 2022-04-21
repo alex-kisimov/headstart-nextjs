@@ -86,3 +86,19 @@
     border-radius: 25px;
     background: #eafaf1;
 }
+
+.removeBtn {
+    cursor: pointer;
+}
+
+.pendingCancel {
+    padding: 8px 21px 8px 8px;
+    margin-right: 0;
+    border-radius: 25px;
+    background: var(--red-hint);
+}
+
+.pendingCancel path:last-child,
+.pendingCancel circle {
+    stroke: var(--red) ;
+}

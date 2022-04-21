@@ -6,19 +6,21 @@ import { useRouter } from 'next/router'
 import Image from 'next/image'
 import logout from '../../ordercloud/redux/ocAuth/logout'
 import { useOcDispatch, useOcSelector } from '../../ordercloud/redux/ocStore'
-import { MainNavLinks } from './links'
+import { buyerLinks, supplierLinks } from './navLinks';
 import styles from './Header.module.css'
 
 const Header = () => {
-  const dispatch = useOcDispatch()
-  const router = useRouter()
-
-  const { user, isAnonymous, loading } = useOcSelector((s) => ({
+  const dispatch = useOcDispatch();
+  const router = useRouter();
+  const { user, isAnonymous, loading, isSupplier, isBuyer } = useOcSelector((s) => ({
+    isSupplier: s.ocUser.user?.Supplier !== null,
+    isBuyer: s.ocUser.user?.Buyer !== null,
     user: s.ocUser.user,
     loading: s.ocAuth.loading,
     isAnonymous: s.ocAuth.isAnonymous,
     lineItemCount: s.ocCurrentOrder.order ? s.ocCurrentOrder.order.LineItemCount : 0,
-  }))
+  }));
+  const mainNavLinks = isSupplier ? supplierLinks : buyerLinks;
 
   return (
     <header className={styles.header}>
@@ -46,34 +48,38 @@ const Header = () => {
             </Link>
           </div>
           <div className={styles['global-group']}>
-            <nav className={styles['global-nav']}>
-              <li>
-                <a href="#">
-                  <button type="button" className={styles.terminal}>
-                    <span>Switch Terminal</span>
-                  </button>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <button type="button" className={styles.Menu}>
-                    <span className={styles.toggle}>
-                      <span className={styles['toggle-dot']} />
-                      <span className={styles['toggle-dot']} />
-                      <span className={styles['toggle-dot']} />
-                      <span className={styles['toggle-dot']} />
-                      <span className={styles['toggle-dot']} />
-                      <span className={styles['toggle-dot']} />
-                      <span className={styles['toggle-dot']} />
-                      <span className={styles['toggle-dot']} />
-                      <span className={styles['toggle-dot']} />
-                    </span>
-                    <span>Global Menu</span>
-                  </button>
-                </a>
-              </li>
-            </nav>
-            <div className={styles.separator}></div>
+            {isBuyer && (
+              <>
+                <nav className={styles['global-nav']}>
+                  <li>
+                    <a href="#">
+                      <button type="button" className={styles.terminal}>
+                        <span>Switch Terminal</span>
+                      </button>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <button type="button" className={styles.Menu}>
+                        <span className={styles.toggle}>
+                          <span className={styles['toggle-dot']} />
+                          <span className={styles['toggle-dot']} />
+                          <span className={styles['toggle-dot']} />
+                          <span className={styles['toggle-dot']} />
+                          <span className={styles['toggle-dot']} />
+                          <span className={styles['toggle-dot']} />
+                          <span className={styles['toggle-dot']} />
+                          <span className={styles['toggle-dot']} />
+                          <span className={styles['toggle-dot']} />
+                        </span>
+                        <span>Global Menu</span>
+                      </button>
+                    </a>
+                  </li>
+                </nav>
+                <div className={styles.separator}></div>
+              </>
+            )}
             <div className={styles.login}>
               {isAnonymous ? (
                 <Link href="/login">
@@ -114,7 +120,7 @@ const Header = () => {
                       </svg>
                     </span>
                     <span className={styles.logintext}>
-                      Logout, {!isAnonymous && user && user.LastName}
+                      Logout, {(!isAnonymous && user) && (`${user.FirstName} ${user.LastName}`)}
                     </span>
                   </div>
                 </button>
@@ -131,7 +137,7 @@ const Header = () => {
           </div>
           <div className={styles.navigation}>
             <nav className={styles.nav}>
-              {(MainNavLinks || []).map((link, i) => {
+              {(mainNavLinks || []).map((link, i) => {
                 return (
                   <li key={`nav${i}`} className={link.IsDashboard ? styles.highlighted : ''}>
                     <Link href={link.Url}>

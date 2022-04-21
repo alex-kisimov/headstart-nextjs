@@ -10,7 +10,6 @@ import ViewIcon from './icons/view-icon';
 import RemoveIcon from './icons/remove-icon';
 
 const OcProductCard = ({ worksheet, product }) => {
-  const promotionDiscount = worksheet?.LineItems[0]?.LineTotal;
   const orderTotal = worksheet?.Order?.Total;
   const hasPromotion = worksheet?.LineItems[0]?.PromotionDiscount !== 0;
   const worksheetId = worksheet?.Order?.ID;

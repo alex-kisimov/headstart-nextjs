@@ -1,13 +1,13 @@
-import { useRouter } from 'next/router'
-import OcLoginForm from '../ordercloud/components/OcLoginForm'
-import LoggedOutLayout from '../components/LoggedOutLayout'
+import { useRouter } from 'next/router';
+import OcLoginForm from '../ordercloud/components/OcLoginForm';
+import LoggedOutLayout from '../components/LoggedOutLayout';
 
 const LoginPage = () => {
-  const { push } = useRouter()
+  const { push } = useRouter();
 
   const handleOnLoggedIn = () => {
-    push('/singleService')
-  }
+      push('/');
+  };
 
   return (
     <div>

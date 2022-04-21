@@ -1,4 +1,4 @@
-export const MainNavLinks = [
+export const buyerLinks = [
     {
         Name: "Dashboard",
         Url: '/',
@@ -13,11 +13,14 @@ export const MainNavLinks = [
         Url: "/appointmentListing"
     },
     {
-        Name: "Order completion",
-        Url: "/orderCompletion"
-    },
-    {
         Name: "Contact Terminal",
         Url: "/"
+    }
+];
+
+export const supplierLinks = [
+    {
+        Name: "Service Enquiries",
+        Url: "/orderCompletion"
     }
 ];

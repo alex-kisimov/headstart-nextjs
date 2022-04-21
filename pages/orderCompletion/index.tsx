@@ -92,7 +92,7 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                                                     <ul>
                                                         <li>Width: {lineItem?.xp?.CargoWidth}</li>
                                                         <li>Height: {lineItem?.xp?.CargoHeight}</li>
-                                                        <li>Lnegth: {lineItem?.xp?.CargoLenght}</li>
+                                                        <li>Length: {lineItem?.xp?.CargoLenght}</li>
                                                         <li>Weight: {lineItem?.xp?.CargoWeight}</li>
                                                     </ul>
                                                     <br />

@@ -45,9 +45,11 @@ const OcProductCard = ({ worksheet, product }) => {
       <div className={styles.title}>
         <p className={styles.name}>{product.Name}</p>
         <div className={styles.quantity}>
-          <p>
-            Quantity: <span className={styles.amount}>{worksheet.LineItems.length}</span>
-          </p>
+          {worksheet?.LineItems.length && (
+            <p>
+              Quantity: <span className={styles.amount}>{worksheet?.LineItems.length}</span>
+            </p>
+          )}
           <Link href={`/appointmentListing/${worksheet.Order.ID}`}>
             <a className={styles.edit}>
               <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

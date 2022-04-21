@@ -46,18 +46,24 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) =
   const products = useOcProductList(options)
 
   const onLineItemChange = (e) => {
-    console.log(e.currentTarget.options[e.currentTarget.selectedIndex].dataset.supplier)
+    console.log(e.currentTarget.options)
     const { orderId } = e.currentTarget.dataset;
     const { valueType } = e.currentTarget.dataset;
-    const supplierId = e.currentTarget.options[e.currentTarget.selectedIndex].dataset.supplier;
+    //const supplierId = e.currentTarget.options[e.currentTarget.selectedIndex].dataset.supplier;
     const newOrdersLineItems = { ...ordersLineItems };
+
+    let supplierId = e.currentTarget.options ? e.currentTarget.options[e.currentTarget.selectedIndex].dataset.supplier : null;
 
     if (typeof newOrdersLineItems[orderId] === 'undefined') {
       newOrdersLineItems[orderId] = {};
     }
 
     newOrdersLineItems[orderId][valueType] = e.currentTarget.value;
-    newOrdersLineItems[orderId].supplierId = supplierId;
+
+    if (supplierId) {
+      newOrdersLineItems[orderId].supplierId = supplierId;
+    }
+
 
     setOrdersLineItems(newOrdersLineItems)
   }
@@ -80,29 +86,26 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) =
 
   const onFormSubmit = async (e) => {
     e.preventDefault();
-    const orders = []
 
     console.log(ordersLineItems)
 
     for (const [orderId, value] of Object.entries(ordersLineItems)) {
       const valueType: any = value;
-      console.log(valueType)
-      
-      Orders.Create("Outgoing", { 
-        ID: orderId, 
-        ToCompanyID: valueType.supplierId 
+      console.log(parseInt(valueType.quantity) || 1)
+
+      Orders.Create("Outgoing", {
+        ID: orderId,
+        ToCompanyID: valueType.supplierId
       }).then(() => {
-        LineItems.Create("Outgoing", orderId, {
-          ProductID: valueType.lineItemId,
-          Quantity: 1
-        }).then((order) => {
-          //IntegrationEvents.GetWorksheet('Outgoing', orderId)
-          // Orders.Save("Outgoing", orderId, order).then(() => {
-          //   getOrders()
-          // })
-        })
+        const lineItemsCount = parseInt(valueType.quantity) || 1;
+
+        for (let i = 0; i < lineItemsCount; i += 1) {
+          LineItems.Create("Outgoing", orderId, {
+            ProductID: valueType.lineItemId,
+            Quantity: 1
+          })
+        }
       })
-      orders.push(orderId)
     }
 
     router.push("/appointmentListing")
@@ -216,7 +219,7 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) =
                     })}
                   </select>
                   <div className={styles.quantityWrapper}>
-                    <input name="quantity" defaultValue="1" type="number" min="1" />
+                    <input name="quantity" defaultValue="1" type="number" min="1" data-order-id={row.orderId} data-value-type="quantity" onChange={onLineItemChange} />
                   </div>
                 </div>
               )

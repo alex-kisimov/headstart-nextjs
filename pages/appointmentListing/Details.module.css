@@ -19,7 +19,7 @@ button.active {
     display: flex;
     flex-direction: column;
     background: #F5F7FA;
-    padding: 82px 115px;
+    padding: 42px 115px 30px;
 }
 .results button[type=submit] {
     align-self: flex-end;
@@ -76,4 +76,16 @@ button.active {
     color: var(--mid-grey);
     white-space: normal;
     text-overflow: ellipsis;
+}
+.loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 150px 0;
+    background-color: #F5F7FA;
+}
+.details {
+    display: flex;
+    justify-content: flex-end;
+    padding: 45px 115px 30px;
 }

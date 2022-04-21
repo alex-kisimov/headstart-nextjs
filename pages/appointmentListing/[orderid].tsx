@@ -1,201 +1,116 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable radix */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { FunctionComponent, useState } from 'react'
-import {
-  BuyerAddress,
-  Address,
-  LineItem,
-  LineItems,
-  Me,
-  Order,
-  Orders,
-  ShipEstimateResponse,
-  IntegrationEvents,
-  RequiredDeep,
-  ShipMethodSelection,
-  OrderWorksheet,
-  Payment,
-  Payments,
-  Auth,
-  ApiRole,
-  Tokens,
-  Product,
-  Products,
-  Promotion,
-} from 'ordercloud-javascript-sdk'
-import OcProductDetail from '../../ordercloud/components/OcProductDetail'
-import { useOcSelector } from '../../ordercloud/redux/ocStore'
+import { FunctionComponent, useEffect, useRef, useState } from 'react'
+import { LineItems, Orders, IntegrationEvents } from 'ordercloud-javascript-sdk'
+import Loader from '../../components/Helpers/Loader'
+import AddDetailsForm from './AddDetailsForm'
 import styles from './Details.module.css'
 
 const OrderPage: FunctionComponent = () => {
   const { query, push } = useRouter()
   const [activeTab, setActiveTab] = useState('item')
+  const [worksheet, setWorksheet] = useState(null)
+  const addDetailForms = useRef([])
 
-  const onFormSubmit = (e) => {
+  const addDetails = (e) => {
     e.preventDefault()
+    const requests = []
 
-    IntegrationEvents.GetWorksheet('Outgoing', query.orderid.toString()).then((worksheet) => {
-      const lineItemId = worksheet.LineItems[0].ID
+    for (let i = 0; i < addDetailForms.current.length; i += 1) {
+      const form = addDetailForms.current[i]
+      const data: any = Object.fromEntries(new FormData(form).entries())
 
-      LineItems.Patch('Outgoing', query.orderid.toString(), lineItemId, {
-        xp: {
-          CargoWidth: parseInt(e.target.width.value),
-          CargoHeight: parseInt(e.target.height.value),
-          CargoLenght: parseInt(e.target.length.value),
-          CargoWeight: parseInt(e.target.weight.value),
-        },
-      }).then((response) => {
-        if (response.PromotionDiscount) {
-          Orders.RemovePromotion('Outgoing', query.orderid.toString(), 'container-calc').then(
-            () => {
-              Orders.AddPromotion('Outgoing', query.orderid.toString(), 'container-calc').then(
-                () => {
-                  push('/appointmentListing')
-                }
-              )
-            }
-          )
-        } else {
+      requests.push(
+        LineItems.Patch('Outgoing', query.orderid.toString(), data.lineItemId, {
+          xp: {
+            CargoWidth: parseInt(data.width),
+            CargoHeight: parseInt(data.height),
+            CargoLenght: parseInt(data.length),
+            CargoWeight: parseInt(data.weight),
+          },
+        })
+      )
+    }
+
+    Promise.all(requests).then((response) => {
+      if (response[0].PromotionDiscount) {
+        Orders.RemovePromotion('Outgoing', query.orderid.toString(), 'container-calc').then(() => {
           Orders.AddPromotion('Outgoing', query.orderid.toString(), 'container-calc').then(() => {
             push('/appointmentListing')
           })
-        }
-      })
+        })
+      } else {
+        Orders.AddPromotion('Outgoing', query.orderid.toString(), 'container-calc').then(() => {
+          push('/appointmentListing')
+        })
+      }
     })
   }
 
-  const showGeneralDetails = () => {}
-  const showRequireDetails = () => {}
+  useEffect(() => {
+    IntegrationEvents.GetWorksheet('Outgoing', query.orderid.toString()).then(
+      (worksheetResponse) => {
+        setWorksheet(worksheetResponse)
+      }
+    )
+  }, [query.orderid])
 
   return (
     <div className="wrapper page-container">
       <div className="title-striped">
         <div>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 497.6 116.7" width="447.6" height="116.7"><path d="M89 42.8v-8.3l62.4-28.6v11zM23.1 53.2V59l96.8-48.6V0zM0 79.6l53.4-22.1v-6.7L0 75.2z" fill="#FF6441"></path></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 497.6 116.7"
+            width="447.6"
+            height="116.7"
+          >
+            <path
+              d="M89 42.8v-8.3l62.4-28.6v11zM23.1 53.2V59l96.8-48.6V0zM0 79.6l53.4-22.1v-6.7L0 75.2z"
+              fill="#FF6441"
+            />
+          </svg>
         </div>
         <h1>Add details</h1>
       </div>
       <ul className={styles.buttonList}>
         <li>
-          <button
-            className={activeTab === 'general' ? styles.active : ''}
-            type="button"
-            onClick={showGeneralDetails}
-          >
+          <button className={activeTab === 'general' ? styles.active : ''} type="button">
             General details
           </button>
         </li>
         <li>
-          <button
-            className={activeTab === 'item' ? styles.active : ''}
-            type="button"
-            onClick={showRequireDetails}
-          >
+          <button className={activeTab === 'item' ? styles.active : ''} type="button">
             Item details
           </button>
         </li>
       </ul>
-      <form className={styles.results} onSubmit={onFormSubmit}>
-        <div className={styles.row}>
-          <div className={styles.col}>
-            <label htmlFor="port">Port of Loading/Departure</label>
-            <input id="port" type="text" placeholder="Enter Details" />
-          </div>
-          <div className={styles.col}>
-            <label htmlFor="vessel">Vessel/Service</label>
-            <input id="vessel" type="text" placeholder="Enter Details" />
-          </div>
+      {!worksheet && (
+        <div className={styles.loader}>
+          <Loader />
         </div>
-
-        <div className={styles.row}>
-          <div className={styles.colHalf}>
-            <label htmlFor="description">Goods description</label>
-            <input id="description" type="text" placeholder="Enter Details" />
-          </div>
-        </div>
-
-        <div className={styles.row}>
-          <div className={styles.col}>
-            <label htmlFor="length">Add length</label>
-            <input required id="length" type="text" placeholder="Length" />
-          </div>
-          <div className={styles.col}>
-            <label htmlFor="height">Add height</label>
-            <input required id="height" type="text" placeholder="Height" />
-          </div>
-          <div className={styles.col}>
-            <label htmlFor="width">Add width</label>
-            <input required id="width" type="text" placeholder="Width" />
-          </div>
-          <div className={styles.col}>
-            <label htmlFor="weight">Add weight</label>
-            <input required id="weight" type="text" placeholder="Weight" />
-          </div>
-        </div>
-
-        <div className={styles.row}>
-          <div className={styles.col}>
-            <label htmlFor="lifting">Lifting points</label>
-            <input id="lifting" type="text" placeholder="Enter Details" />
-          </div>
-          <div className={styles.col}>
-            <label htmlFor="location">Cargo location</label>
-            <input id="location" type="text" placeholder="Enter Details" />
-          </div>
-        </div>
-
-        <div className={styles.colHalf}>
-          <label htmlFor="operation">Type of operation</label>
-          <input id="operation" type="text" placeholder="Enter Details" />
-        </div>
-        <div className={styles.radioContainer}>
-          <p>Does it have a cradle?</p>
-          <fieldset className={styles.radio}>
-            <label>
-              <input type="radio" name="cradleHave" value="Yes" />
-              Yes
-            </label>
-            <label>
-              <input type="radio" name="cradleHave" value="No" />
-              No
-            </label>
-          </fieldset>
-        </div>
-
-        <div className={styles.radioContainer}>
-          <p>Does it need a cradle?</p>
-          <fieldset className={styles.radio}>
-            <label>
-              <input type="radio" name="cradleNeed" value="Yes" />
-              Yes
-            </label>
-            <label>
-              <input type="radio" name="cradleNeed" value="No" />
-              No
-            </label>
-          </fieldset>
-        </div>
-
-        <div className={styles.radioContainer}>
-          <p>Storage needed?</p>
-          <fieldset className={styles.radio}>
-            <label>
-              <input type="radio" name="storage" value="Yes" />
-              Yes
-            </label>
-            <label>
-              <input type="radio" name="storage" value="No" />
-              No
-            </label>
-          </fieldset>
-        </div>
-
-        <button type="submit" className="btn btn--secondary">
+      )}
+      {worksheet && (
+        <>
+          {worksheet.LineItems.map((lineItem, i) => {
+            return (
+              <AddDetailsForm
+                addDetailForms={addDetailForms}
+                lineItem={lineItem}
+                key={i}
+                itemIndex={i}
+              />
+            )
+          })}
+        </>
+      )}
+      <div className={styles.details}>
+        <button type="button" onClick={addDetails} className="btn">
           Add details
         </button>
-      </form>
+      </div>
     </div>
   )
 }

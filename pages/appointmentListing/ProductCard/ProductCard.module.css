@@ -3,29 +3,36 @@
     padding: 30px 40px 20px 40px;
     background-color: #ffffff;
 }
+
 .container:first-child {
     margin-top: 0;
 }
+
 .name {
     margin-top: 0;
     font-size: 25px;
 }
+
 .description {
     margin-bottom: 0;
 }
+
 .list {
     display: flex;
     list-style: none;
     padding: 0;
 }
+
 .item {
     display: flex;
     align-items: center;
     margin-right: 20px;
 }
+
 .svg {
     margin-right: 15px;
 }
+
 .bottom {
     margin-top: 20px;
     padding-top: 15px;
@@ -34,11 +41,13 @@
     align-items: center;
     border-top: 2px solid #f5f7fa;
 }
+
 .price {
     margin-left: 15px;
     font-size: 28px;
     color: #FF6441;
 }
+
 .pricecontainer {
     display: flex;
     justify-content: center;
@@ -46,25 +55,32 @@
     flex-shrink: 0;
     margin-left: 75px;
 }
+
 .icons {
     list-style: none;
     padding: 0;
     display: flex;
 }
+
 .iconItem {
     margin-right: 15px;
 }
+
 .iconItem:last-child {
     margin-right: 0;
 }
+
 .middle {
     display: flex;
     align-items: flex-start;
+    justify-content: space-between;
 }
+
 .submitted {
     border-left: 4px solid #008040;
 }
-.submittedIcon { 
+
+.submittedIcon {
     padding: 8px 21px 8px 8px;
     margin-right: 0;
     border-radius: 25px;

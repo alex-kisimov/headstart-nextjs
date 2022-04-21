@@ -52,11 +52,7 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
         const requests = []
 
         if (token) {
-            setShowLoader(true)
-
-            // Me.ListOrders({sortBy: ['!LastUpdated']}).then((responseOpen) => {
-            //     console.log(responseOpen)
-            // });
+            setShowLoader(true);
 
             Me.ListOrders({ sortBy: ['!LastUpdated'] }).then((response) => {
                 const allSentRequests = response.Items.filter((order) => !order.xp?.RequestToCancel);
@@ -186,7 +182,6 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
             setShowLoader(true)
 
             Me.ListOrders({ sortBy: ['!LastUpdated'], filters: { Status: 'Canceled' } }).then((responseCanceled) => {
-                console.log()
                 responseCanceled.Items.forEach(order => {
                     requests.push(IntegrationEvents.GetWorksheet('Outgoing', order.ID))
                 });
@@ -217,14 +212,14 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
     }
 
     const showCancellationPending = () => {
-        setActiveTab('requestCancel')
-        getCancellationPending()
-    }
+        setActiveTab('requestCancel');
+        getCancellationPending();
+    };
 
     const showCancelled = () => {
-        setActiveTab('cancelled')
-        getCancelled()
-    }
+        setActiveTab('cancelled');
+        getCancelled();
+    };
 
     useEffect(() => {
         getAllProducts()

@@ -123,7 +123,7 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                     requests.push(IntegrationEvents.GetWorksheet('Outgoing', order.ID))
                 });
 
-                resolvePromises(requests)
+                resolvePromises(requests);
             })
         }
     }
@@ -140,7 +140,7 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                     requests.push(IntegrationEvents.GetWorksheet('Outgoing', order.ID))
                 });
 
-                resolvePromises(requests)
+                resolvePromises(requests);
             })
         }
     }

@@ -100,5 +100,39 @@
 
 .pendingCancel path:last-child,
 .pendingCancel circle {
-    stroke: var(--red) ;
+    stroke: var(--red);
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.edit {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--primary-two);
+    background-color: #ffefec;
+    border-radius: 50%;
+}
+
+.edit:hover {
+    background-color: #ffffff;
+}
+
+.quantity {
+    display: flex;
+    align-items: center;
+}
+
+.quantity p {
+    margin: 0 15px 0 0;
+}
+
+.amount {
+    font-weight: bold;
 }

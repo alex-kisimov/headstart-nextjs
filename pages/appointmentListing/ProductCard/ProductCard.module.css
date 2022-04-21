@@ -80,17 +80,39 @@
     border-left: 4px solid #008040;
 }
 
+.pending {
+    border-left: 4px solid var(--primary-four);
+}
+
 .submittedIcon {
     padding: 8px 21px 8px 8px;
     margin-right: 0;
     border-radius: 25px;
     background: #eafaf1;
 }
+
+.removeBtn {
+    cursor: pointer;
+}
+
+.pendingCancel {
+    padding: 8px 21px 8px 8px;
+    margin-right: 0;
+    border-radius: 25px;
+    background: var(--red-hint);
+}
+
+.pendingCancel path:last-child,
+.pendingCancel circle {
+    stroke: var(--red);
+}
+
 .title {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
+
 .edit {
     width: 32px;
     height: 32px;
@@ -101,16 +123,20 @@
     background-color: #ffefec;
     border-radius: 50%;
 }
+
 .edit:hover {
     background-color: #ffffff;
 }
+
 .quantity {
     display: flex;
     align-items: center;
 }
+
 .quantity p {
     margin: 0 15px 0 0;
 }
+
 .amount {
     font-weight: bold;
 }

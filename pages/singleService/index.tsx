@@ -39,18 +39,16 @@ function generateUUID() {
 }
 
 const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) => {
-  const router = useRouter()
-  const firstOrederId = generateUUID()
-  const [rows, setRows] = useState([{ orderId: firstOrederId }])
-  const [ordersLineItems, setOrdersLineItems] = useState({})
-  const products = useOcProductList(options)
+  const router = useRouter();
+  const firstOrederId = generateUUID();
+  const [rows, setRows] = useState([{ orderId: firstOrederId }]);
+  const [ordersLineItems, setOrdersLineItems] = useState({});
+  const products = useOcProductList(options);
 
   const onLineItemChange = (e) => {
-    console.log(e.currentTarget.options)
+    const newOrdersLineItems = { ...ordersLineItems }
     const { orderId } = e.currentTarget.dataset;
     const { valueType } = e.currentTarget.dataset;
-    //const supplierId = e.currentTarget.options[e.currentTarget.selectedIndex].dataset.supplier;
-    const newOrdersLineItems = { ...ordersLineItems };
 
     let supplierId = e.currentTarget.options ? e.currentTarget.options[e.currentTarget.selectedIndex].dataset.supplier : null;
 
@@ -87,11 +85,9 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) =
   const onFormSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(ordersLineItems)
 
     for (const [orderId, value] of Object.entries(ordersLineItems)) {
       const valueType: any = value;
-      console.log(parseInt(valueType.quantity) || 1)
 
       Orders.Create("Outgoing", {
         ID: orderId,
@@ -237,4 +233,4 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) =
   )
 }
 
-export default SingleServicePage
+export default SingleServicePage;

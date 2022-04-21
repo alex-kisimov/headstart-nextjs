@@ -24,25 +24,26 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
     const allOrders = useRef(0)
     const requireDetails = useRef(0)
     const readyToSend = useRef(0)
-    const sentRequests = useRef(0)
+    const sentRequests = useRef(0);
+    const requestedToCancel = useRef(0);
 
     const resolvePromises = (requests) => {
         Promise.all(requests).then((worksheetsResponse) => {
-            const productRequests = []
+            const productRequests = [];
 
             worksheets.current = worksheetsResponse
 
             worksheetsResponse.forEach((worksheet: any) => {
-                const productId = worksheet.LineItems[0].ProductID
+                const productId = worksheet.LineItems[0].ProductID;
 
-                productRequests.push(Me.GetProduct(productId))
-            })
+                productRequests.push(Me.GetProduct(productId));
+            });
 
             Promise.all(productRequests).then((productsResponse) => {
-                setShowLoader(false)
-                setProducts(productsResponse)
-            })
-        })
+                setShowLoader(false);
+                setProducts(productsResponse);
+            });
+        });
     }
 
     const getAllProducts = () => {
@@ -53,31 +54,38 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
             setShowLoader(true)
 
             Me.ListOrders({ sortBy: ['!LastUpdated'], filters: { Status: 'Open' } }).then((responseOpen) => {
-                sentRequests.current = responseOpen.Items.length
+                const allSentRequests = responseOpen.Items.filter((order) => !order.xp?.RequestToCancel);
+                sentRequests.current = allSentRequests.length;
 
                 Me.ListOrders({ sortBy: ['!LastUpdated'], filters: { Status: 'Unsubmitted' } }).then((responseUnsubmitted) => {
-                    let requireDetailsCount = 0
-                    let readyToSendCount = 0
+                    let requireDetailsCount = 0;
+                    let readyToSendCount = 0;
+                    let requestToCancel = 0;
 
                     responseOpen.Items.forEach(order => {
-                        requests.push(IntegrationEvents.GetWorksheet('Outgoing', order.ID))
-                    });
-
-                    responseUnsubmitted.Items.forEach(order => {
-                        if (order.PromotionDiscount === 0) {
-                            requireDetailsCount += 1
-                        } else {
-                            readyToSendCount += 1
+                        if (order.xp?.RequestToCancel) {
+                            requestToCancel += 1;
                         }
 
                         requests.push(IntegrationEvents.GetWorksheet('Outgoing', order.ID))
                     });
 
-                    readyToSend.current = readyToSendCount
-                    requireDetails.current = requireDetailsCount
-                    allOrders.current = requests.length
+                    responseUnsubmitted.Items.forEach(order => {
+                        if (order.PromotionDiscount === 0) {
+                            requireDetailsCount += 1;
+                        } else {
+                            readyToSendCount += 1;
+                        }
 
-                    resolvePromises(requests)
+                        requests.push(IntegrationEvents.GetWorksheet('Outgoing', order.ID))
+                    });
+
+                    readyToSend.current = readyToSendCount;
+                    requireDetails.current = requireDetailsCount;
+                    requestedToCancel.current = requestToCancel;
+                    allOrders.current = requests.length;
+
+                    resolvePromises(requests);
                 })
             })
         }
@@ -116,7 +124,7 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                     requests.push(IntegrationEvents.GetWorksheet('Outgoing', order.ID))
                 });
 
-                resolvePromises(requests)
+                resolvePromises(requests);
             })
         }
     }
@@ -129,11 +137,32 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
             setShowLoader(true)
 
             Me.ListOrders({ sortBy: ['!LastUpdated'], filters: { Status: 'Open' } }).then((responseOpen) => {
-                responseOpen.Items.forEach(order => {
+                const sentOrders = responseOpen.Items.filter((order) => !order.xp?.RequestToCancel);
+
+                sentOrders.forEach(order => {
                     requests.push(IntegrationEvents.GetWorksheet('Outgoing', order.ID))
                 });
 
-                resolvePromises(requests)
+                resolvePromises(requests);
+            })
+        }
+    }
+
+    const getCancellationPending = () => {
+        const token = Tokens.GetAccessToken();
+        const requests = [];
+
+        if (token) {
+            setShowLoader(true)
+
+            Me.ListOrders({ sortBy: ['!LastUpdated'], filters: { Status: 'Open' } }).then((responseOpen) => {
+                const ordersRequestedToCancel = responseOpen.Items.filter((order) => order.xp?.RequestToCancel || false);
+
+                ordersRequestedToCancel.forEach(order => {
+                    requests.push(IntegrationEvents.GetWorksheet('Outgoing', order.ID))
+                });
+
+                resolvePromises(requests);
             })
         }
     }
@@ -156,6 +185,11 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
     const showSent = () => {
         setActiveTab('sent')
         getSent()
+    }
+
+    const showCancellationPending = () => {
+        setActiveTab('requestCancel')
+        getCancellationPending()
     }
 
     useEffect(() => {
@@ -186,6 +220,9 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                 </li>
                 <li>
                     <button disabled={sentRequests.current === 0 || activeTab === 'sent'} className={activeTab === 'sent' ? styles.active : ''} type="button" onClick={showSent}>Sent Requests ({sentRequests.current})</button>
+                </li>
+                <li>
+                    <button disabled={requestedToCancel.current === 0 || activeTab === 'requestCancel'} className={activeTab === 'requestCancel' ? styles.active : ''} type="button" onClick={showCancellationPending}>Cancellation Pending ({requestedToCancel.current})</button>
                 </li>
             </ul>
             <div className={styles.results}>

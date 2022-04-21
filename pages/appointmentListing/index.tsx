@@ -54,7 +54,8 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
             setShowLoader(true)
 
             Me.ListOrders({ sortBy: ['!LastUpdated'], filters: { Status: 'Open' } }).then((responseOpen) => {
-                sentRequests.current = responseOpen.Items.length;
+                const allSentRequests = responseOpen.Items.filter((order) => !order.xp?.RequestToCancel);
+                sentRequests.current = allSentRequests.length;
 
                 Me.ListOrders({ sortBy: ['!LastUpdated'], filters: { Status: 'Unsubmitted' } }).then((responseUnsubmitted) => {
                     let requireDetailsCount = 0;
@@ -136,7 +137,9 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
             setShowLoader(true)
 
             Me.ListOrders({ sortBy: ['!LastUpdated'], filters: { Status: 'Open' } }).then((responseOpen) => {
-                responseOpen.Items.forEach(order => {
+                const sentOrders = responseOpen.Items.filter((order) => !order.xp?.RequestToCancel);
+
+                sentOrders.forEach(order => {
                     requests.push(IntegrationEvents.GetWorksheet('Outgoing', order.ID))
                 });
 
@@ -153,20 +156,12 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
             setShowLoader(true)
 
             Me.ListOrders({ sortBy: ['!LastUpdated'], filters: { Status: 'Open' } }).then((responseOpen) => {
-                responseOpen.Items.forEach(order => {
+                const ordersRequestedToCancel = responseOpen.Items.filter((order) => order.xp?.RequestToCancel || false);
 
-                    console.log(order)
-
-                // console.log(activeTab)
-
-                // if (activeTab === "requestCancel" && worksheet.LineItems[0]?.xp?.RequestToCancel) {
-                //     return;
-                // }
-                   // console.log(order)
-                   // requests.push(IntegrationEvents.GetWorksheet('Outgoing', order.ID))
+                ordersRequestedToCancel.forEach(order => {
+                    requests.push(IntegrationEvents.GetWorksheet('Outgoing', order.ID))
                 });
 
-                //console.log(responseOpen)
                 resolvePromises(requests);
             })
         }

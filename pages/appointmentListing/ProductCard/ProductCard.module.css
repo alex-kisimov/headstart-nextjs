@@ -84,6 +84,11 @@
     border-left: 4px solid var(--primary-four);
 }
 
+.cancelledCard {
+    border-left: 4px solid var(--red);
+    background: var(--red-hint);
+}
+
 .submittedIcon {
     padding: 8px 21px 8px 8px;
     margin-right: 0;
@@ -105,6 +110,14 @@
 .pendingCancel path:last-child,
 .pendingCancel circle {
     stroke: var(--red);
+}
+
+.cancelled {
+    padding: 11px 21px 16px;
+    margin-right: 0;
+    border-radius: 25px;
+    background: var(--red-hint);
+    font-weight: 500;
 }
 
 .title {

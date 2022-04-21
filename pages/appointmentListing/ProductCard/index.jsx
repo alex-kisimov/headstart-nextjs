@@ -20,7 +20,7 @@ const OcProductCard = ({ worksheet, product }) => {
     Orders.Delete("Outgoing", worksheetId).then(() => {
       toRemove(true);
     }).catch(() => {
-      console.error(`Error removing worksheet ${worksheetId}`)
+      console.error(`Error removing worksheet ${worksheetId}`);
     });
   };
 

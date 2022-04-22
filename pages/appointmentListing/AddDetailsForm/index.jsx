@@ -21,19 +21,27 @@ const AddDetailsForm = ({ addDetailForms, lineItem, itemIndex }) => {
 
       <div className={styles.row}>
         <div className={styles.col}>
-          <label htmlFor="length">Add length</label>
+          <label htmlFor="length">
+            Add length<span className={styles.required}>*</span>
+          </label>
           <input name="length" required id="length" type="text" placeholder="Length" />
         </div>
         <div className={styles.col}>
-          <label htmlFor="height">Add height</label>
+          <label htmlFor="height">
+            Add height<span className={styles.required}>*</span>
+          </label>
           <input name="height" required id="height" type="text" placeholder="Height" />
         </div>
         <div className={styles.col}>
-          <label htmlFor="width">Add width</label>
+          <label htmlFor="width">
+            Add width<span className={styles.required}>*</span>
+          </label>
           <input name="width" required id="width" type="text" placeholder="Width" />
         </div>
         <div className={styles.col}>
-          <label htmlFor="weight">Add weight</label>
+          <label htmlFor="weight">
+            Add weight<span className={styles.required}>*</span>
+          </label>
           <input name="weight" required id="weight" type="text" placeholder="Weight" />
         </div>
       </div>

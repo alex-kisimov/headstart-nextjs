@@ -13,6 +13,7 @@ const OrderPage: FunctionComponent = () => {
   const [activeTab, setActiveTab] = useState('item')
   const [worksheet, setWorksheet] = useState(null)
   const [loader, setLoader] = useState(true)
+  const [error, setError] = useState(false)
   const addDetailForms = useRef([])
 
   const addDetails = (e) => {
@@ -20,6 +21,17 @@ const OrderPage: FunctionComponent = () => {
     const requests = []
 
     setLoader(true)
+    setError(false)
+
+    for (let i = 0; i < addDetailForms.current.length; i += 1) {
+      const form = addDetailForms.current[i]
+      const data: any = Object.fromEntries(new FormData(form).entries())
+
+      if (!data.length || !data.height || !data.width || !data.weight) {
+        setError(true)
+        return
+      }
+    }
 
     for (let i = 0; i < addDetailForms.current.length; i += 1) {
       const form = addDetailForms.current[i]
@@ -111,6 +123,11 @@ const OrderPage: FunctionComponent = () => {
         </>
       )}
       <div className={styles.details}>
+        {error && (
+          <div className={styles.error}>
+            <p>Please fill out all the required fields</p>
+          </div>
+        )}
         <button type="button" onClick={addDetails} className="btn">
           Add details
         </button>

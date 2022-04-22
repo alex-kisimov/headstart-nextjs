@@ -12,11 +12,14 @@ const OrderPage: FunctionComponent = () => {
   const { query, push } = useRouter()
   const [activeTab, setActiveTab] = useState('item')
   const [worksheet, setWorksheet] = useState(null)
+  const [loader, setLoader] = useState(true)
   const addDetailForms = useRef([])
 
   const addDetails = (e) => {
     e.preventDefault()
     const requests = []
+
+    setLoader(true)
 
     for (let i = 0; i < addDetailForms.current.length; i += 1) {
       const form = addDetailForms.current[i]
@@ -53,6 +56,7 @@ const OrderPage: FunctionComponent = () => {
     IntegrationEvents.GetWorksheet('Outgoing', query.orderid.toString()).then(
       (worksheetResponse) => {
         setWorksheet(worksheetResponse)
+        setLoader(false)
       }
     )
   }, [query.orderid])
@@ -87,12 +91,12 @@ const OrderPage: FunctionComponent = () => {
           </button>
         </li>
       </ul>
-      {!worksheet && (
+      {loader && (
         <div className={styles.loader}>
           <Loader />
         </div>
       )}
-      {worksheet && (
+      {!loader && (
         <>
           {worksheet.LineItems.map((lineItem, i) => {
             return (

@@ -101,10 +101,7 @@ const OcProductCard = ({ worksheet, product }) => {
         {product.PriceSchedule?.PriceBreaks[0].Price && !hasPromotion && (
           <div className={styles.pricecontainer}>
             <p>
-              Base cost{' '}
-              <span className={styles.price}>
-                {formatPrice(product.PriceSchedule?.PriceBreaks[0].Price)}
-              </span>
+              Base cost <span className={styles.price}>{formatPrice(orderTotal)}</span>
             </p>
           </div>
         )}

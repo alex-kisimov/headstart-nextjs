@@ -29,6 +29,7 @@ const OrderPage: FunctionComponent = () => {
 
       if (!data.length || !data.height || !data.width || !data.weight) {
         setError(true)
+        setLoader(false)
         return
       }
     }

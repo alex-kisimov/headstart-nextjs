@@ -283,6 +283,7 @@ button:focus {
   color: #FF6441;
   border: 1px solid #FF6441;
   cursor: pointer;
+  font-size: 1.6rem;
 }
 .btn--secondary {
   background-color: #ffffff;

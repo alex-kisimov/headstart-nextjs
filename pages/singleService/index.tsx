@@ -76,9 +76,9 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) =
     setRows(newRows);
   };
 
-  const removeRow = () => {
+  const removeRow = (e) => {
     const newRows = [...rows];
-    newRows.pop();
+    newRows.splice(e.target.dataset.index, 1);
     setRows(newRows);
   };
 
@@ -196,7 +196,7 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) =
                   {i === 0 ? (
                     <label htmlFor="services">Services</label>
                   ) : (
-                    <button type="button" className={styles.request_remove_button} onClick={removeRow}></button>
+                    <button type="button" className={styles.request_remove_button} onClick={removeRow} data-index={i}></button>
                   )}
                   <select
                     id="services"

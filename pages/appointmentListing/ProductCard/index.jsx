@@ -17,6 +17,7 @@ const OcProductCard = ({ worksheet, product }) => {
   const isCancelled = worksheet?.Order.Status === "Canceled";
   const [isRemoved, toRemove] = useState(false);
   const [isRequestCancel, setIsRequestCancel] = useState(worksheet?.Order?.xp?.RequestToCancel || false);
+  const [openModal, setOpenModal] = useState(false);
 
   const removeCard = () => {
     Orders.Delete("Outgoing", worksheetId).then(() => {
@@ -27,14 +28,23 @@ const OcProductCard = ({ worksheet, product }) => {
   };
 
   const requestCancellation = () => {
-    Orders.Patch('Outgoing', worksheetId, { 
+    Orders.Patch('Outgoing', worksheetId, {
       xp: {
         RequestToCancel: true
       },
     }).then(() => {
       setIsRequestCancel(true);
+      setOpenModal(false);
     });
   };
+
+  const openCancellationModal = () => {
+    setOpenModal(true);
+  }
+
+  const closeCancellationModal = () => {
+    setOpenModal(false);
+  }
 
   if (!product || isRemoved) {
     return null;
@@ -101,7 +111,7 @@ const OcProductCard = ({ worksheet, product }) => {
         {(isSubmitted && !isRequestCancel && !isCancelled) && (
           <ul className={styles.list}>
             <li className={styles.item}>
-              <button onClick={requestCancellation} type="button" className="btn btn--secondary">
+              <button onClick={openCancellationModal} type="button" className="btn btn--secondary">
                 Request cancellation
               </button>
             </li>
@@ -118,7 +128,7 @@ const OcProductCard = ({ worksheet, product }) => {
           </li>
         )}
 
-        {(isRequestCancel && !isCancelled)  && (
+        {(isRequestCancel && !isCancelled) && (
           <li className={`${styles.item} ${styles.pendingCancel}`}>
             <RemoveIcon customClass={styles.svg} />
             Cancellation pending
@@ -159,6 +169,27 @@ const OcProductCard = ({ worksheet, product }) => {
           </>
         )}
       </div>
+      {openModal && (
+        <div className={styles.modal}>
+          <div className={styles.modalInner}>
+            <p className={styles.modalTitle}>Cancel Request</p>
+            <div className={styles.inner}>
+              <p className={styles.error}>
+                Are you sure you want to cancel this request? Lorem ipsum dolor sit amet, consectetur
+                adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </p>
+            </div>
+            <div className={styles.actions}>
+              <button type="button" className={`btn btn--secondary ${styles.cancel}`} onClick={closeCancellationModal}>
+                Back to enquiry
+              </button>
+              <button type="button" className="btn" onClick={requestCancellation}>
+                Confirm Request
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

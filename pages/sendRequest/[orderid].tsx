@@ -81,30 +81,33 @@ const SendrequestPage: FunctionComponent = () => {
               </a>
             </Link>
           </div>
-          {orderDetails.map((lineItem, i) => {
-            return (
-              <div key={lineItem.ID}>
-                <ul className={styles.list}>
-                  <li className={styles.item}>
-                    <p className={styles.label}>Cargo width</p>
-                    <p className={styles.value}>{lineItem.xp.CargoWidth}m</p>
-                  </li>
-                  <li className={styles.item}>
-                    <p className={styles.label}>Cargo height</p>
-                    <p className={styles.value}>{lineItem.xp.CargoHeight}m</p>
-                  </li>
-                  <li className={styles.item}>
-                    <p className={styles.label}>Cargo length</p>
-                    <p className={styles.value}>{lineItem.xp.CargoLenght}m</p>
-                  </li>
-                  <li className={styles.item}>
-                    <p className={styles.label}>Cargo weight</p>
-                    <p className={styles.value}>{lineItem.xp.CargoWeight}m</p>
-                  </li>
-                </ul>
-              </div>
-            )
-          })}
+          <div className={styles.orderDetails}>
+            {orderDetails.map((lineItem, i) => {
+              return (
+                <div key={lineItem.ID}>
+                  <p className={styles.lineitem}>{lineItem?.Product?.Name}</p>
+                  <ul className={styles.list}>
+                    <li className={styles.item}>
+                      <p className={styles.label}>Cargo width</p>
+                      <p className={styles.value}>{lineItem.xp.CargoWidth}m</p>
+                    </li>
+                    <li className={styles.item}>
+                      <p className={styles.label}>Cargo height</p>
+                      <p className={styles.value}>{lineItem.xp.CargoHeight}m</p>
+                    </li>
+                    <li className={styles.item}>
+                      <p className={styles.label}>Cargo length</p>
+                      <p className={styles.value}>{lineItem.xp.CargoLenght}m</p>
+                    </li>
+                    <li className={styles.item}>
+                      <p className={styles.label}>Cargo weight</p>
+                      <p className={styles.value}>{lineItem.xp.CargoWeight}m</p>
+                    </li>
+                  </ul>
+                </div>
+              )
+            })}
+          </div>
           <div className={styles.actions}>
             <button type="button" className={`${styles.submit} btn`} onClick={sendRequest}>
               Submit enquiry

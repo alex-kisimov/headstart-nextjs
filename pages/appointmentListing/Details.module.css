@@ -89,3 +89,17 @@ button.active {
     justify-content: flex-end;
     padding: 45px 115px 30px;
 }
+.error {
+    display: flex;
+    padding: 15px 25px;
+    align-items: center;
+    margin-right: auto;
+    background-color: var(--red-hint);
+    color: var(--red);
+}
+.error p {
+    margin: 0;
+}
+.required {
+    color: var(--red)
+}

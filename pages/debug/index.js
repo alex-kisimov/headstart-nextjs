@@ -93,6 +93,8 @@ const TestPage = () => {
             <h2>Delete all orders</h2>
             <button className='btn' onClick={deleteOrders} data-status="Open">Delete "Open" orders</button>
             <button className='btn' onClick={deleteOrders} data-status="Unsubmitted">Delete "Unsubmitted" orders</button>
+            <button className='btn' onClick={deleteOrders} data-status="Completed">Delete "Completed" orders</button>
+            <button className='btn' onClick={deleteOrders} data-status="Canceled">Delete "Cancelled" orders</button>
           </div>
         </div>
         <aside style={{ minWidth: "40%", maxWidth: "30%", overflowX: "auto" }}>

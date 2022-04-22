@@ -27,6 +27,7 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
     const sentRequests = useRef(0);
     const requestedToCancel = useRef(0);
     const cancelledRequests = useRef(0);
+    const completedRequests = useRef(0);
 
     const resolvePromises = (requests) => {
         Promise.all(requests).then((worksheetsResponse) => {
@@ -62,7 +63,8 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                     let requireDetailsCount = 0;
                     let readyToSendCount = 0;
                     let requestToCancel = 0;
-                    let cancelledRequest = 0;
+                    let cancelledRequestCount = 0;
+                    let completedRequestCount = 0;
 
                     response.Items.forEach(order => {
                         if (order.xp?.RequestToCancel && order.Status === "Open") {
@@ -70,7 +72,11 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                         }
 
                         if (order.Status === "Canceled") {
-                            cancelledRequest += 1;
+                            cancelledRequestCount += 1;
+                        }
+
+                        if (order.Status === "Completed") {
+                            completedRequestCount += 1;
                         }
 
                         requests.push(IntegrationEvents.GetWorksheet('Outgoing', order.ID))
@@ -86,11 +92,12 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                         requests.push(IntegrationEvents.GetWorksheet('Outgoing', order.ID))
                     });
 
+                    allOrders.current = requests.length;
                     readyToSend.current = readyToSendCount;
                     requireDetails.current = requireDetailsCount;
                     requestedToCancel.current = requestToCancel;
-                    allOrders.current = requests.length;
-                    cancelledRequests.current = cancelledRequest;
+                    cancelledRequests.current = cancelledRequestCount;
+                    completedRequests.current = completedRequestCount;
 
                     resolvePromises(requests);
                 })
@@ -191,6 +198,23 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
         }
     }
 
+    const getCompleted = () => {
+        const token = Tokens.GetAccessToken()
+        const requests = []
+
+        if (token) {
+            setShowLoader(true)
+
+            Me.ListOrders({ sortBy: ['!LastUpdated'], filters: { Status: 'Completed' } }).then((responseCanceled) => {
+                responseCanceled.Items.forEach(order => {
+                    requests.push(IntegrationEvents.GetWorksheet('Outgoing', order.ID))
+                });
+
+                resolvePromises(requests);
+            })
+        }
+    }
+
     const showAll = () => {
         setActiveTab('all')
         getAllProducts()
@@ -221,6 +245,11 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
         getCancelled();
     };
 
+    const showCompleted = () => {
+        setActiveTab('completed');
+        getCompleted();
+    };
+
     useEffect(() => {
         getAllProducts()
     }, [storeToken])
@@ -239,7 +268,7 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
             </div>
             <ul className={styles.buttonList}>
                 <li>
-                    <button disabled={allOrders.current === 0 || activeTab === 'all'} className={activeTab === 'all' ? styles.active : ''} type="button" onClick={showAll}>Showing All ({allOrders.current})</button>
+                    <button disabled={allOrders.current === 0 || activeTab === 'all'} className={activeTab === 'all' ? styles.active : ''} type="button" onClick={showAll}>Show All ({allOrders.current})</button>
                 </li>
                 <li>
                     <button disabled={requireDetails.current === 0 || activeTab === 'require'} className={activeTab === 'require' ? styles.active : ''} type="button" onClick={showRequireDetails}>Requires Details ({requireDetails.current})</button>
@@ -255,6 +284,9 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                 </li>
                 <li>
                     <button disabled={cancelledRequests.current === 0 || activeTab === 'cancelled'} className={activeTab === 'cancelled' ? styles.active : ''} type="button" onClick={showCancelled}>Cancelled ({cancelledRequests.current})</button>
+                </li>
+                <li>
+                    <button disabled={completedRequests.current === 0 || activeTab === 'completed'} className={activeTab === 'completed' ? styles.active : ''} type="button" onClick={showCompleted}>Completed ({completedRequests.current})</button>
                 </li>
             </ul>
             <div className={styles.results}>

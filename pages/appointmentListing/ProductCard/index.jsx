@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Orders } from 'ordercloud-javascript-sdk';
 import formatPrice from '../../../ordercloud/utils/formatPrice';
@@ -15,9 +15,11 @@ const OcProductCard = ({ worksheet, product }) => {
   const worksheetId = worksheet?.Order?.ID;
   const isSubmitted = worksheet?.Order.Status === "Open";
   const isCancelled = worksheet?.Order.Status === "Canceled";
+  const isCompleted = worksheet?.Order.Status === "Completed";
   const [isRemoved, toRemove] = useState(false);
   const [isRequestCancel, setIsRequestCancel] = useState(worksheet?.Order?.xp?.RequestToCancel || false);
   const [openModal, setOpenModal] = useState(false);
+  const [isDebug, setIsDebug] = useState(false)
 
   const removeCard = () => {
     Orders.Delete("Outgoing", worksheetId).then(() => {
@@ -46,21 +48,36 @@ const OcProductCard = ({ worksheet, product }) => {
     setOpenModal(false);
   }
 
+  useEffect(() => {
+    const windowSearch = Object.fromEntries(new URLSearchParams(window.location.search))
+
+    if (windowSearch.debug) {
+      setIsDebug(true)
+    }
+  }, [])
+
   if (!product || isRemoved) {
     return null;
   }
 
   return (
-    <div className={`${styles.container} ${(isRequestCancel && !isCancelled) ? styles.pending : ''} ${isCancelled ? styles.cancelledCard : ''} ${isSubmitted ? styles.submitted : ''}`}>
+    <div className={`${styles.container} ${(isRequestCancel && !isCancelled) ? styles.pending : ''} ${isCancelled ? styles.cancelledCard : ''} ${isSubmitted ? styles.submitted : ''} ${isCompleted ? styles.completed : ''}`}>
       <div className={styles.title}>
-        <p className={styles.name}>{product.Name}</p>
+        <p className={styles.name}>
+          {product.Name}
+          {isDebug && (
+            <>
+              {` - `} {worksheetId}
+            </>
+          )}
+        </p>
         <div className={styles.quantity}>
           {worksheet?.LineItems.length && (
             <p>
               Quantity: <span className={styles.amount}>{worksheet?.LineItems.length}</span>
             </p>
           )}
-          {(!isSubmitted && !isCancelled) && (
+          {(!isSubmitted && !isCancelled && !isCompleted) && (
             <Link href={`/appointmentListing/${worksheet?.Order.ID}`}>
               <a className={styles.edit}>
                 <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -84,10 +101,7 @@ const OcProductCard = ({ worksheet, product }) => {
         {product.PriceSchedule?.PriceBreaks[0].Price && !hasPromotion && (
           <div className={styles.pricecontainer}>
             <p>
-              Base cost{' '}
-              <span className={styles.price}>
-                {formatPrice(product.PriceSchedule?.PriceBreaks[0].Price)}
-              </span>
+              Base cost <span className={styles.price}>{formatPrice(orderTotal)}</span>
             </p>
           </div>
         )}
@@ -100,7 +114,7 @@ const OcProductCard = ({ worksheet, product }) => {
           <li className={styles.iconItem}>
             <ViewIcon customClass={undefined} />
           </li>
-          {(!isSubmitted && !isCancelled) && (
+          {(!isSubmitted && !isCancelled && !isCompleted) && (
             <li className={styles.iconItem}>
               <button type="button" className={styles.removeBtn} onClick={removeCard} title="Remove">
                 <RemoveIcon customClass={undefined} />
@@ -128,6 +142,12 @@ const OcProductCard = ({ worksheet, product }) => {
           </li>
         )}
 
+        {isCompleted && (
+          <li className={`${styles.item}`}>
+            Completed
+          </li>
+        )}
+
         {(isRequestCancel && !isCancelled) && (
           <li className={`${styles.item} ${styles.pendingCancel}`}>
             <RemoveIcon customClass={styles.svg} />
@@ -135,7 +155,7 @@ const OcProductCard = ({ worksheet, product }) => {
           </li>
         )}
 
-        {(!isSubmitted && !isCancelled) && (
+        {(!isSubmitted && !isCancelled && !isCompleted) && (
           <ul className={styles.list}>
             <li className={styles.item}>
               <TickIcon customClass={styles.svg} />
@@ -155,7 +175,7 @@ const OcProductCard = ({ worksheet, product }) => {
             </li>
           </ul>
         )}
-        {(!isSubmitted && !isCancelled) && (
+        {(!isSubmitted && !isCancelled && !isCompleted) && (
           <>
             {hasPromotion ? (
               <Link href={`/sendRequest/${worksheetId}`}>

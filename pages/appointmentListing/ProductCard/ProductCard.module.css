@@ -79,6 +79,10 @@
 .submitted {
     border-left: 4px solid #008040;
 }
+.completed {
+    border-left: 4px solid #008040;
+    background: var(--green-hint);
+}
 
 .pending {
     border-left: 4px solid var(--primary-four);

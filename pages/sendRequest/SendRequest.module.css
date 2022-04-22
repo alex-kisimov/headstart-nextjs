@@ -43,6 +43,7 @@
 }
 .submit {
     margin-top: 30px;
+    margin-bottom: 120px;
 }
 .tableHead {
     display: flex;    
@@ -65,4 +66,14 @@
 }
 .edit:hover {
     background-color: #ffffff;
+}
+.lineitem {
+    padding-top: 20px;
+    margin-top: 80px;
+    margin-bottom: 40px;
+    border-top: 1px solid #979797;
+    font-size: 2.2rem;
+}
+.orderDetails > div:first-child > p {
+    margin-top: 20px;
 }

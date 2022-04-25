@@ -22,8 +22,9 @@ button.active {
     padding: 150px 0;
 }
 .results {
-    background: #F5F7FA;
+    background: #fafbfc;
     padding: 37px 115px;
+    margin-bottom: 50px;
 }
 .error {
     display: flex;

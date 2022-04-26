@@ -140,6 +140,9 @@
   --unit-eleven-half: calc(100% / 12 * 11.5);
   --unit-eleven-three-quarter: calc(100% / 12 * 11.75);
   --unit-twelve: 100%;
+
+  --tick: url("data:image/svg+xml,%3Csvg width='14' height='10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.875 6.858L12.555 0l1.332 1.492-9.12 8.142L.5 5.188l1.443-1.385z' fill='%23ff6441' fill-rule='evenodd'/%3E%3C/svg%3E");
+  --tick-hover: url("data:image/svg+xml,%3Csvg width='14' height='10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.875 6.858L12.555 0l1.332 1.492-9.12 8.142L.5 5.188l1.443-1.385z' fill='%23FFF' fill-rule='evenodd'/%3E%3C/svg%3E");
 }
 
 html {
@@ -382,6 +385,9 @@ h6,
 
 .title-striped {
   position: relative;
+}
+.title-striped--margin-top {
+  margin-top: 80px;
 }
 
 .title-striped  h1 {
@@ -1221,6 +1227,16 @@ tfoot tr {
 }
 
 /* Table Actions */
+.action__icon--complete {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: var(--tick);
+}
+.action__icon--complete:hover {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: var(--tick-hover);
+}
 .generic-table__actions {
   display: flex;
   justify-content: space-between;

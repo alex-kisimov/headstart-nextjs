@@ -450,6 +450,9 @@ img {
 
 /* more buttons */
 
+button {
+  cursor: pointer;
+}
 .button {
   position: relative;
   cursor: pointer;
@@ -864,6 +867,21 @@ tfoot tr {
 .generic-table__cell {
   position: relative;
 }
+.generic-table__cell .action:last-child:not(:first-child) {
+  margin-left: 15px;
+}
+.generic-table__cell--flex {
+  display: flex;
+}
+.generic-table__cell--flex button {
+  margin-bottom: 0;
+  margin: 0 10px;
+}
+.generic-table__cell--flex button:focus {
+  margin-bottom: 0;
+  margin: 0 10px;
+}
+
 .generic-table__cell--no-results {
   /* minus 0.1px to fix the horizontal scrollbar always being shown */
   width: calc(100% - 0.1px);
@@ -1544,4 +1562,68 @@ label svg {
 [dir="rtl"] label svg {
     margin-right: 0;
     margin-left: 8px;
+}
+
+/* RAG Status */
+.status {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 8px 8px 0;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 1rem;
+  line-height: 1.8rem;
+  letter-spacing: 0.083rem;
+  font-family: var(--maersk-bold);
+  text-transform: uppercase;
+  color: var(--primary-one);
+  background-color: var(--neutral-grey-hint);
+  white-space: nowrap;
+  vertical-align: middle;
+}
+[dir="rtl"] .status {
+  margin: 0 0 8px 8px;
+}
+.status:only-child,
+[dir="rtl"] .status:only-child {
+  margin: 0;
+}
+.status svg {
+  width: auto;
+  max-height: 2.4rem;
+  margin: 0 4px 0 -10px;
+}
+[dir="rtl"] .status svg {
+  margin: 0 -10px 0 4px;
+}
+.status path {
+  fill: var(--primary-one);
+}
+
+.status--red {
+  background-color: var(--red-hint);
+}
+.status--red path {
+  fill: var(--red);
+}
+.status--amber {
+  background-color: var(--soft-yellow-hint);
+}
+.status--amber path {
+  fill: var(--soft-yellow);
+}
+.status--green {
+  background-color: var(--green-hint);
+}
+.status--green path {
+  fill: var(--green);
+}
+.status--black,
+[dir="rtl"] .status--black {
+  background-color: var(--primary-one);
+  color: #ffffff;
+  padding: 3px 13px;
+}
+.status--black path {
+  fill: #ffffff;
 }

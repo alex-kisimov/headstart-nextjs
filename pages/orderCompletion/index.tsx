@@ -109,7 +109,7 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                             <table className="fixed-table__data-table generic-table__table">
                                 <thead className="generic-table__thead">
                                     <tr className="generic-table__row">
-                                        {["Created by User", "Company", "Date submitted", "Service", "Width", "Height", "Length", "Weight", "Total", "Status"].map((title, i) => {
+                                        {["Created by User", "Company", "Date submitted", "Service", "Width", "Height", "Length", "Weight", "Total", "Status", "Actions"].map((title, i) => {
                                             return (
                                                 <th key={i} className="generic-table__header">
                                                     <button className="generic-sort">
@@ -157,7 +157,23 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                                                         <td className="generic-table__cell">{li.cargoLength}</td>
                                                         <td className="generic-table__cell">{li.cargoWeight}</td>
                                                         <td className="generic-table__cell">{li.total}</td>
-                                                        <td className="generic-table__cell">{li.status}</td>
+                                                        <td className="generic-table__cell"><StatusCell text={li.status}/></td>
+                                                        <td className="generic-table__cell">
+                                                        {(order.Status !== 'Completed' && order.Status !== 'Canceled') && (
+                                                            <td className="generic-table__cell generic-table__cell--flex">
+                                                                <button className="action generic-table__action generic-table__action--desktop generic-table__action--filter action--secondary" data-orderid={order.ID} onClick={completeOrder}>
+                                                                    <span className="action__icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 18" width="14" height="18"><path d="M10.664 0H0v18h14V3.454zm-.849 2L12 4.263V16H2V2zM3 10h3v2H3zm0-3h8v2H3zm4 3h4v2H7zm-4 3h3v2H3zm4 0h4v2H7z" fill="#ff6441"></path></svg></span>
+                                                                    <span className="action__label">Complete</span>
+                                                                </button>
+
+                                                                {order?.xp?.RequestToCancel && 
+                                                                <button className="action generic-table__action generic-table__action--desktop generic-table__action--filter action--secondary" data-orderid={order.ID} onClick={cancelOrder}>
+                                                                    <span className="action__icon"><svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path d="M13.824 5 15 6.176 11.176 10 15 13.824 13.824 15 10 11.176 6.176 15 5 13.824 8.824 10 5 6.176 6.176 5 10 8.823 13.824 5z" fill="#3C3C46" fillRule="evenodd"></path></svg></span>
+                                                                    <span className="action__label">Cancel</span>
+                                                                </button>}
+                                                            </td>
+                                                        )}
+                                                        </td>
                                                     </tr>
                                                 );
                                             })
@@ -178,7 +194,24 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                                                     )
                                                 })}
                                                 <td className="generic-table__cell">{order.Total}</td>
-                                                <td className="generic-table__cell">{order.Status}</td>
+                                                <td className="generic-table__cell"><StatusCell text={order.Status}/></td>
+
+                                                {(order.Status !== 'Completed' && order.Status !== 'Canceled') && (
+                                                    <td className="generic-table__cell generic-table__cell--flex">
+                                                        <button className="action generic-table__action generic-table__action--desktop generic-table__action--filter action--secondary" data-orderid={order.ID} onClick={completeOrder}>
+                                                            <span className="action__icon">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 18" width="14" height="18"><path d="M10.664 0H0v18h14V3.454zm-.849 2L12 4.263V16H2V2zM3 10h3v2H3zm0-3h8v2H3zm4 3h4v2H7zm-4 3h3v2H3zm4 0h4v2H7z" fill="#ff6441"></path></svg>
+                                                            </span>
+                                                            <span className="action__label">Complete</span>
+                                                        </button>
+
+                                                        {order?.xp?.RequestToCancel && 
+                                                        <button className="action generic-table__action generic-table__action--desktop generic-table__action--filter action--secondary" data-orderid={order.ID} onClick={cancelOrder}>
+                                                            <span className="action__icon"><svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path d="M13.824 5 15 6.176 11.176 10 15 13.824 13.824 15 10 11.176 6.176 15 5 13.824 8.824 10 5 6.176 6.176 5 10 8.823 13.824 5z" fill="#3C3C46" fillRule="evenodd"></path></svg></span>
+                                                            <span className="action__label">Cancel</span>
+                                                        </button>}
+                                                    </td>
+                                                )}
                                             </tr>
                                         )
                                     )
@@ -192,5 +225,47 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
         </div>
     )
 }
+
+const StatusCell = ({ text }) => {
+
+    const getColour = () => {
+        let colour = "";
+        switch (text) {
+            case "Completed":
+                colour = "green";
+                break;
+            case "Canceled":
+                colour = "red";
+                break;
+            default: break;
+        }
+        return colour;
+    }
+
+    const getPath = () => {
+        let path;
+        switch (getColour()) {
+            case "green":
+                path = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="18" height="18">
+                    <path d="M9 16A7 7 0 109 2a7 7 0 000 14zm0 2A9 9 0 119.001-.001 9 9 0 019 18zm3.334-12.246l1.332 1.492-6.32 5.642-3.067-3.195L5.72 8.307l1.732 1.805 4.881-4.358z" fill="#008040" fillRule="evenodd"></path>
+                </svg>
+                break;
+            case "red":
+                path = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="18" height="18">
+                    <path d="M9 2a7 7 0 100 14A7 7 0 009 2zm0-2a9 9 0 11-.001 18.001A9 9 0 019 0zm1 11H8V4h2zm0 3H8v-2h2z" fill="#e21f2d" fillRule="evenodd"></path>
+                </svg>
+                break;
+            default: break;
+        }
+        return path;
+    }
+
+    return (text &&
+        <span className={"status status--" + getColour()}>
+            {getPath()}
+            {text}
+        </span>
+    ) || null;
+};
 
 export default AppointmentListingPage

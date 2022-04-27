@@ -103,3 +103,9 @@ button.active {
 .required {
     color: var(--red)
 }
+.itemTitle {
+    padding: 20px 20px;
+}
+.itemTitle p {
+    margin-bottom: 0;
+}

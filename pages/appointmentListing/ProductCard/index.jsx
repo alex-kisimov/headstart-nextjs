@@ -13,20 +13,24 @@ const OcProductCard = ({ worksheet, product }) => {
   const orderTotal = worksheet?.Order?.Total;
   const hasPromotion = worksheet?.LineItems[0]?.PromotionDiscount !== 0;
   const worksheetId = worksheet?.Order?.ID;
-  const isSubmitted = worksheet?.Order.Status === "Open";
-  const isCancelled = worksheet?.Order.Status === "Canceled";
-  const isCompleted = worksheet?.Order.Status === "Completed";
+  const isSubmitted = worksheet?.Order.Status === 'Open';
+  const isCancelled = worksheet?.Order.Status === 'Canceled';
+  const isCompleted = worksheet?.Order.Status === 'Completed';
   const [isRemoved, toRemove] = useState(false);
-  const [isRequestCancel, setIsRequestCancel] = useState(worksheet?.Order?.xp?.RequestToCancel || false);
+  const [isRequestCancel, setIsRequestCancel] = useState(
+    worksheet?.Order?.xp?.RequestToCancel || false
+  )
   const [openModal, setOpenModal] = useState(false);
   const [isDebug, setIsDebug] = useState(false)
 
   const removeCard = () => {
-    Orders.Delete("Outgoing", worksheetId).then(() => {
-      toRemove(true);
-    }).catch(() => {
-      console.error(`Error removing worksheet ${worksheetId}`);
-    });
+    Orders.Delete('Outgoing', worksheetId)
+      .then(() => {
+        toRemove(true)
+      })
+      .catch(() => {
+        console.error(`Error removing worksheet ${worksheetId}`)
+      })
   };
 
   const requestCancellation = () => {
@@ -61,7 +65,11 @@ const OcProductCard = ({ worksheet, product }) => {
   }
 
   return (
-    <div className={`${styles.container} ${(isRequestCancel && !isCancelled) ? styles.pending : ''} ${isCancelled ? styles.cancelledCard : ''} ${isSubmitted ? styles.submitted : ''} ${isCompleted ? styles.completed : ''}`}>
+    <div
+      className={`${styles.container} ${isRequestCancel && !isCancelled ? styles.pending : ''} ${
+        isCancelled ? styles.cancelledCard : ''
+      } ${isSubmitted ? styles.submitted : ''} ${isCompleted ? styles.completed : ''}`}
+    >
       <div className={styles.title}>
         <p className={styles.name}>
           {product.Name}
@@ -77,7 +85,7 @@ const OcProductCard = ({ worksheet, product }) => {
               Quantity: <span className={styles.amount}>{worksheet?.LineItems.length}</span>
             </p>
           )}
-          {(!isSubmitted && !isCancelled && !isCompleted) && (
+          {!isSubmitted && !isCancelled && !isCompleted && (
             <Link href={`/appointmentListing/${worksheet?.Order.ID}`}>
               <a className={styles.edit}>
                 <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -91,7 +99,8 @@ const OcProductCard = ({ worksheet, product }) => {
         </div>
       </div>
       <div className={styles.middle}>
-        <p className={styles.description}>{product.Description}</p>
+        <p className={styles.addPreference}>Add a personal reference</p>
+        {/* <p className={styles.description}>{product.Description}</p> */}
         {hasPromotion && (
           <div className={styles.pricecontainer}>
             <span>Estimated cost</span>{' '}
@@ -100,8 +109,9 @@ const OcProductCard = ({ worksheet, product }) => {
         )}
         {product.PriceSchedule?.PriceBreaks[0].Price && !hasPromotion && (
           <div className={styles.pricecontainer}>
+            <p>Base cost </p>
             <p>
-              Base cost <span className={styles.price}>{formatPrice(orderTotal)}</span>
+              <span className={styles.price}>{formatPrice(orderTotal)}</span>
             </p>
           </div>
         )}
@@ -114,18 +124,27 @@ const OcProductCard = ({ worksheet, product }) => {
           <li className={styles.iconItem}>
             <ViewIcon customClass={undefined} />
           </li>
-          {(!isSubmitted && !isCancelled && !isCompleted) && (
+          {!isSubmitted && !isCancelled && !isCompleted && (
             <li className={styles.iconItem}>
-              <button type="button" className={styles.removeBtn} onClick={removeCard} title="Remove">
+              <button
+                type="button"
+                className={styles.removeBtn}
+                onClick={removeCard}
+                title="Remove"
+              >
                 <RemoveIcon customClass={undefined} />
               </button>
             </li>
           )}
         </ul>
-        {(isSubmitted && !isRequestCancel && !isCancelled) && (
+        {isSubmitted && !isRequestCancel && !isCancelled && (
           <ul className={styles.list}>
             <li className={styles.item}>
-              <button onClick={openCancellationModal} type="button" className="btn btn--secondary">
+              <button
+                onClick={openCancellationModal}
+                type="button"
+                className="button button--small"
+              >
                 Request cancellation
               </button>
             </li>
@@ -136,31 +155,21 @@ const OcProductCard = ({ worksheet, product }) => {
           </ul>
         )}
 
-        {isCancelled && (
-          <li className={`${styles.item} ${styles.cancelled}`}>
-            Cancelled
-          </li>
+        {isCancelled && <li className={`${styles.item} ${styles.cancelled}`}>Cancelled</li>}
+
+        {isCompleted && <li className={`${styles.item}`}>Completed</li>}
+
+        {isRequestCancel && !isCancelled && (
+          <li className={`${styles.item} ${styles.pendingCancel}`}>Cancellation pending</li>
         )}
 
-        {isCompleted && (
-          <li className={`${styles.item}`}>
-            Completed
-          </li>
-        )}
-
-        {(isRequestCancel && !isCancelled) && (
-          <li className={`${styles.item} ${styles.pendingCancel}`}>
-            <RemoveIcon customClass={styles.svg} />
-            Cancellation pending
-          </li>
-        )}
-
-        {(!isSubmitted && !isCancelled && !isCompleted) && (
+        {!isSubmitted && !isCancelled && !isCompleted && (
           <ul className={styles.list}>
             <li className={styles.item}>
               <TickIcon customClass={styles.svg} />
               Select service
             </li>
+            <li className={styles.separator} />
             <li className={styles.item}>
               {hasPromotion ? (
                 <TickIcon customClass={styles.svg} />
@@ -169,21 +178,22 @@ const OcProductCard = ({ worksheet, product }) => {
               )}
               Provide details
             </li>
+            <li className={styles.separator} />
             <li className={styles.item}>
               <ArrowIcon customClass={styles.svg} />
               Send request
             </li>
           </ul>
         )}
-        {(!isSubmitted && !isCancelled && !isCompleted) && (
+        {!isSubmitted && !isCancelled && !isCompleted && (
           <>
             {hasPromotion ? (
               <Link href={`/sendRequest/${worksheetId}`}>
-                <a className="btn">Send request</a>
+                <a className="button button--small button--primary">Send request</a>
               </Link>
             ) : (
               <Link href={`/appointmentListing/${worksheetId}`}>
-                <a className="btn btn--secondary">Add details</a>
+                <a className="button button--small">Add details</a>
               </Link>
             )}
           </>
@@ -195,15 +205,24 @@ const OcProductCard = ({ worksheet, product }) => {
             <p className={styles.modalTitle}>Cancel Request</p>
             <div className={styles.inner}>
               <p className={styles.error}>
-                Are you sure you want to cancel this request? Lorem ipsum dolor sit amet, consectetur
-                adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                Are you sure you want to cancel this request? Lorem ipsum dolor sit amet,
+                consectetur consectetur consectetur adipiscing elit, sed do eiusmod tempor
+                incididunt ut labore et dolore magna aliqua.
               </p>
             </div>
             <div className={styles.actions}>
-              <button type="button" className={`btn btn--secondary ${styles.cancel}`} onClick={closeCancellationModal}>
+              <button
+                type="button"
+                className={`button button--small ${styles.cancel}`}
+                onClick={closeCancellationModal}
+              >
                 Back to enquiry
               </button>
-              <button type="button" className="btn" onClick={requestCancellation}>
+              <button
+                type="button"
+                className="button button--small button--primary"
+                onClick={requestCancellation}
+              >
                 Confirm Request
               </button>
             </div>
@@ -214,4 +233,4 @@ const OcProductCard = ({ worksheet, product }) => {
   )
 }
 
-export default OcProductCard;
+export default OcProductCard

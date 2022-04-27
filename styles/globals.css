@@ -195,7 +195,7 @@ input[type="password"] {
 }
 
 .page-container {
-  padding-top: 100px;
+  padding-top: 60px;
 }
 
 /* links */
@@ -390,14 +390,15 @@ h6,
   margin-top: 80px;
 }
 
-.title-striped  h1 {
-  margin-bottom: 10px;
+.title-striped h1 {
+  margin-bottom: 35px;
 }
 
 .title-striped div {
   pointer-events: none;
   position: absolute;
   left: 269px;
+  z-index: -1;
 }
 .title-striped svg {
   transform: scale(3);
@@ -1642,4 +1643,16 @@ label svg {
 }
 .status--black path {
   fill: #ffffff;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }

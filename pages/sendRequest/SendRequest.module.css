@@ -1,5 +1,5 @@
 .title {
-    margin: 15px 0 30px;
+    margin: 0 0 8px !important;
 }
 .list {
     list-style: none;
@@ -95,4 +95,46 @@
     align-items: center;
     justify-content: center;
     background: #80808036;
+    z-index: 1;
+}
+.heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+.cost {
+    font-size: 4rem;
+    color: #ff6441;
+}
+.costContainer {
+    display: flex;
+    align-items: center;
+}
+.costLabel {
+    margin-right: 8px;
+    color: #5a6e7d;
+}
+.quantity {
+    font-weight: bold;
+}
+.quantityWrapper {
+    display: flex;
+    align-items: center;
+}
+.quantityLabel {
+    margin-left: auto;
+    margin-right: 4px;
+}
+.headingEdit {
+    margin-left: 10px;
+}
+.addPreference {
+    color: #5a6e7d;
+}
+.disclaimer {
+    padding: 17px 16px;
+    margin-top: 16px;
+    margin-bottom: 42px;
+    background-color: var(--white-three);
+    color: var(--primary-one);
 }

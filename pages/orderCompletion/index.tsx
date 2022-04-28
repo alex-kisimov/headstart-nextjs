@@ -132,7 +132,8 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                                                 cargoLength: li.xp?.CargoLenght,
                                                 cargoWeight: li.xp?.CargoWeight,
                                                 total: liIndex === 0 ? order.Total : "",
-                                                status: liIndex === 0 ? order.Status : ""
+                                                Status: liIndex === 0 ? order.Status : "",
+                                                xp: order.xp
                                             }
                                         });
                                     }
@@ -151,32 +152,30 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                                                         <td className="generic-table__cell">{li.cargoLength}</td>
                                                         <td className="generic-table__cell">{li.cargoWeight}</td>
                                                         <td className="generic-table__cell">{li.total}</td>
-                                                        <td className="generic-table__cell"><StatusCell text={li.status}/></td>
-                                                        <td className="generic-table__cell">
-                                                        {(order.Status !== 'Completed' && order.Status !== 'Canceled') && (
-                                                            <td className="generic-table__cell generic-table__cell--flex">
+                                                        <td className="generic-table__cell"><StatusCell li={li}/></td>
+                                                        <td className="generic-table__cell generic-table__cell--flex">
+                                                            {(order.Status !== 'Completed' && order.Status !== 'Canceled') && (
+                                                                <>
                                                                 <button className="action generic-table__action generic-table__action--desktop generic-table__action--filter action--secondary" data-orderid={order.ID} onClick={completeOrder}>
                                                                     <span className="action__loader">
                                                                         <svg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg">
-                                                                            <circle cx="70" cy="28" r="14" transform="translate(-55 -13)" stroke="#FFE0D9" stroke-width="2" fill="none" fill-rule="evenodd" pathLength="100"></circle>
+                                                                            <circle cx="70" cy="28" r="14" transform="translate(-55 -13)" stroke="#FFE0D9" strokeWidth="2" fill="none" fillRule="evenodd" pathLength="100"></circle>
                                                                         </svg>
                                                                     </span>
                                                                     <span className="action__icon action__icon--complete"></span>
                                                                     <span className="action__label">Complete</span>
                                                                 </button>
-
-                                                                {order?.xp?.RequestToCancel && 
                                                                 <button className="action generic-table__action generic-table__action--desktop generic-table__action--filter action--secondary" data-orderid={order.ID} onClick={cancelOrder}>
                                                                     <span className="action__loader">
                                                                         <svg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg">
-                                                                            <circle cx="70" cy="28" r="14" transform="translate(-55 -13)" stroke="#FFE0D9" stroke-width="2" fill="none" fill-rule="evenodd" pathLength="100"></circle>
+                                                                            <circle cx="70" cy="28" r="14" transform="translate(-55 -13)" stroke="#FFE0D9" strokeWidth="2" fill="none" fillRule="evenodd" pathLength="100"></circle>
                                                                         </svg>
                                                                     </span>
                                                                     <span className="action__icon"><svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" style={{marginRight: "1px", marginBottom: "1px"}}><path d="M13.824 5 15 6.176 11.176 10 15 13.824 13.824 15 10 11.176 6.176 15 5 13.824 8.824 10 5 6.176 6.176 5 10 8.823 13.824 5z" fill="#3C3C46" fillRule="evenodd"></path></svg></span>
                                                                     <span className="action__label">Cancel</span>
-                                                                </button>}
-                                                            </td>
-                                                        )}
+                                                                </button>
+                                                                </>
+                                                            )}
                                                         </td>
                                                     </tr>
                                                 );
@@ -198,10 +197,10 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                                                     )
                                                 })}
                                                 <td className="generic-table__cell">{order.Total}</td>
-                                                <td className="generic-table__cell"><StatusCell text={order.Status}/></td>
-
-                                                {(order.Status !== 'Completed' && order.Status !== 'Canceled') && (
-                                                    <td className="generic-table__cell generic-table__cell--flex">
+                                                <td className="generic-table__cell"><StatusCell li={order}/></td>
+                                                <td className="generic-table__cell generic-table__cell--flex">
+                                                    {(order.Status !== 'Completed' && order.Status !== 'Canceled') && (
+                                                        <>
                                                         <button className="action generic-table__action generic-table__action--desktop generic-table__action--filter action--secondary" data-orderid={order.ID} onClick={completeOrder}>
                                                             <span className="action__loader">
                                                                 <svg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg">
@@ -211,8 +210,6 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                                                             <span className="action__icon action__icon--complete"></span>
                                                             <span className="action__label">Complete</span>
                                                         </button>
-
-                                                        {order?.xp?.RequestToCancel && 
                                                         <button className="action generic-table__action generic-table__action--desktop generic-table__action--filter action--secondary" data-orderid={order.ID} onClick={cancelOrder}>
                                                             <span className="action__loader">
                                                                 <svg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg">
@@ -221,9 +218,10 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
                                                             </span>
                                                             <span className="action__icon"><svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" style={{marginRight: "1px", marginBottom: "1px"}}><path d="M13.824 5 15 6.176 11.176 10 15 13.824 13.824 15 10 11.176 6.176 15 5 13.824 8.824 10 5 6.176 6.176 5 10 8.823 13.824 5z" fill="#3C3C46" fillRule="evenodd"></path></svg></span>
                                                             <span className="action__label">Cancel</span>
-                                                        </button>}
-                                                    </td>
-                                                )}
+                                                        </button>
+                                                        </>
+                                                    )}
+                                                </td>
                                             </tr>
                                         )
                                     )
@@ -238,7 +236,17 @@ const AppointmentListingPage: FunctionComponent<OcProductListProps> = () => {
     )
 }
 
-const StatusCell = ({ text }) => {
+const StatusCell = ({ li }) => {
+    const getText = (li) => {
+        if (li.Status === "Completed" || li.Status === "Canceled") {
+            return li.Status;
+        } else if (li.xp?.RequestToCancel) {
+            return "Cancellation pending";
+        }
+        return li.Status;
+    };
+
+    const text = getText(li);
 
     const getColour = () => {
         let colour = "";
@@ -248,6 +256,9 @@ const StatusCell = ({ text }) => {
                 break;
             case "Canceled":
                 colour = "red";
+                break;
+            case "Cancellation pending":
+                colour = "amber";
                 break;
             default: break;
         }

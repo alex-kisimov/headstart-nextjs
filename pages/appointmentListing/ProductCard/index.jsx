@@ -100,7 +100,6 @@ const OcProductCard = ({ worksheet, product }) => {
       </div>
       <div className={styles.middle}>
         <p className={styles.addPreference}>Add a personal reference</p>
-        {/* <p className={styles.description}>{product.Description}</p> */}
         {hasPromotion && (
           <div className={styles.pricecontainer}>
             <span>Estimated cost</span>{' '}

@@ -10,6 +10,7 @@
 
 .name {
     margin-top: 0;
+    margin-bottom: 0;
     font-size: 25px;
 }
 
@@ -19,14 +20,26 @@
 
 .list {
     display: flex;
+    align-items: center;
     list-style: none;
-    padding: 0;
+    padding: 8px;
+    background-color: #fafbfc;
+    border-radius: 24.5px;
+}
+.separator {
+    width: 48px;
+    height: 1px;
+    border-top: 1px dashed #979797;
+    margin-right: 18px;
 }
 
 .item {
     display: flex;
     align-items: center;
-    margin-right: 20px;
+    margin-right: 18px;
+}
+.item:last-child {
+    margin-right: 9px;
 }
 
 .svg {
@@ -34,7 +47,7 @@
 }
 
 .bottom {
-    margin-top: 20px;
+    margin-top: 14px;
     padding-top: 15px;
     display: flex;
     justify-content: space-between;
@@ -55,6 +68,9 @@
     flex-shrink: 0;
     margin-left: 75px;
 }
+.pricecontainer p {
+    margin-bottom: 0;
+}
 
 .icons {
     list-style: none;
@@ -72,7 +88,7 @@
 
 .middle {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
 }
 
@@ -105,10 +121,10 @@
 }
 
 .pendingCancel {
-    padding: 8px 21px 8px 8px;
+    padding: 8px 21px 8px 21px;
     margin-right: 0;
     border-radius: 25px;
-    background: var(--red-hint);
+    background: #f8e5c7;
 }
 
 .pendingCancel path:last-child,
@@ -128,6 +144,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 25px;
 }
 
 .edit {
@@ -195,4 +212,8 @@
 .actions {    
     padding: 34px 40px 40px;
     border-top: 1px solid #cccccc;
+}
+.addPreference {
+    margin-bottom: 0;
+    color: #5a6e7d;
 }

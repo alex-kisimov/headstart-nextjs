@@ -129,7 +129,7 @@ const OrderPage: FunctionComponent = () => {
             <p>Please fill out all the required fields</p>
           </div>
         )}
-        <button type="button" onClick={addDetails} className="btn">
+        <button type="button" onClick={addDetails} className="button button--small button--primary">
           Add details
         </button>
       </div>

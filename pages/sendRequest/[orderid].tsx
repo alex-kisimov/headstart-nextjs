@@ -5,6 +5,7 @@ import React, { FunctionComponent, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Orders, IntegrationEvents, Tokens } from 'ordercloud-javascript-sdk'
+import formatPrice from '../../ordercloud/utils/formatPrice'
 import { useOcSelector } from '../../ordercloud/redux/ocStore'
 import Loader from '../../components/Helpers/Loader'
 import styles from './SendRequest.module.css'
@@ -12,6 +13,7 @@ import styles from './SendRequest.module.css'
 const SendrequestPage: FunctionComponent = () => {
   const { query, push } = useRouter()
   const storeToken = useOcSelector((store) => store.ocAuth.decodedToken)
+  const [orderworksheet, setOrderWorksheet] = useState(null)
   const [orderDetails, setOrderDetails] = useState(null)
   const [loader, setLoader] = useState(false)
 
@@ -30,19 +32,61 @@ const SendrequestPage: FunctionComponent = () => {
 
     if (token && query?.orderid) {
       IntegrationEvents.GetWorksheet('Outgoing', query.orderid.toString()).then((worksheet) => {
+        setOrderWorksheet(worksheet)
         setOrderDetails(worksheet.LineItems)
       })
     }
   }, [storeToken, query])
 
+  console.log(orderworksheet)
   return (
     <div className="wrapper page-container">
-      <div className="title-striped">
+      <div className={styles.heading}>
         <div>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 497.6 116.7" width="447.6" height="116.7"><path d="M89 42.8v-8.3l62.4-28.6v11zM23.1 53.2V59l96.8-48.6V0zM0 79.6l53.4-22.1v-6.7L0 75.2z" fill="#FF6441"></path></svg>
+          <div className="title-striped">
+            <div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 497.6 116.7"
+                width="447.6"
+                height="116.7"
+              >
+                <path
+                  d="M89 42.8v-8.3l62.4-28.6v11zM23.1 53.2V59l96.8-48.6V0zM0 79.6l53.4-22.1v-6.7L0 75.2z"
+                  fill="#FF6441"
+                />
+              </svg>
+            </div>
+            {orderworksheet && (
+              <h1 className={`${styles.title} h2`}>
+                {orderworksheet?.LineItems[0]?.Product?.Name}
+              </h1>
+            )}
+          </div>
+          <p className={styles.addPreference}>Add a personal preference</p>
         </div>
-        <h1 className={styles.title}>Send request</h1>
+        <div>
+          <div className={styles.quantityWrapper}>
+            <span className={styles.quantityLabel}>Quantity:</span>
+            <span className={styles.quantity}>{orderDetails?.length}</span>{' '}
+            <button type="button" className={`${styles.edit} ${styles.headingEdit}`}>
+              <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <g fill="#FF6441" fillRule="evenodd">
+                  <path d="M13.523 1.546 2.917 12.153l-.529 3.71 3.71-.528L16.706 4.728l-3.182-3.182zm0 2.122 1.06 1.06-9.191 9.192-1.238.177.176-1.237 9.193-9.192zM9 15h9v1H9z" />
+                </g>
+              </svg>
+            </button>
+          </div>
+          <div className={styles.costContainer}>
+            <span className={styles.costLabel}>Estimated cost:</span>
+            <span className={styles.cost}>{formatPrice(orderworksheet?.Order?.Total)}</span>
+          </div>
+        </div>
       </div>
+      <p className={styles.disclaimer}>
+        The estimated cost incurs charges relating to moves within the terminal that may not be
+        reflected within the breakdown
+      </p>
       {orderDetails && (
         <div className={styles.results}>
           {loader && (
@@ -66,7 +110,9 @@ const SendrequestPage: FunctionComponent = () => {
             {orderDetails.map((lineItem, i) => {
               return (
                 <div key={lineItem.ID}>
-                  <p className={styles.lineitem}>{lineItem?.Product?.Name}</p>
+                  <p className={styles.lineitem}>
+                    {lineItem?.Product?.Name} {i + 1}
+                  </p>
                   <ul className={styles.list}>
                     <li className={styles.item}>
                       <p className={styles.label}>Cargo width</p>
@@ -90,7 +136,11 @@ const SendrequestPage: FunctionComponent = () => {
             })}
           </div>
           <div className={styles.actions}>
-            <button type="button" className={`${styles.submit} btn`} onClick={sendRequest}>
+            <button
+              type="button"
+              className={`${styles.submit} button button--small button--primary`}
+              onClick={sendRequest}
+            >
               Submit enquiry
             </button>
           </div>

@@ -87,6 +87,11 @@
 }
 .request_select {
     padding: 10px;
+    min-height: 48px;
+    border-radius: 4px;
+    border: solid 1px #7a8591;
+    appearance: auto;
+    -webkit-appearance: auto;
 }
 .request_form * {
     margin-bottom: 20px;
@@ -157,21 +162,55 @@
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    margin-bottom: 0;
 }
 
 .selectWrapper label {
     width: 100%;
 }
 
-.selectWrapper select {
-    width: calc(100% - 70px);
+.selectWrapper select,
+.addService {
+    width: calc(100% - 120px);
+}
+
+.addService button {
+    width: 100%;
 }
 
 .quantityWrapper {
-    max-width: 50px;
+    max-width: 100px;
     display: flex;
+    align-items: center;
 }
 
 .quantityWrapper input {
     width: 100%;
+    min-height: 48px;
+    max-width: 48px;
+    border-radius: 4px;
+    border: solid 1px #7a8591;
+    text-align: center;
+    margin-bottom: 0;
+}
+.quantityWrapper svg {
+    margin-bottom: 0;
+}
+.remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    margin-bottom: 0;
+}
+.add {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    margin-bottom: 0;
 }

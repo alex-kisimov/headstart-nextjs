@@ -24,7 +24,7 @@ button.active {
 .results {
     background: #F5F7FA;
     padding: 37px 115px;
-    margin-bottom: 30px;
+    margin-bottom: 100px;
 }
 .error {
     display: flex;

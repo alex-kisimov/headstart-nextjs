@@ -41,7 +41,7 @@ function generateUUID() {
 const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) => {
   const router = useRouter();
   const firstOrederId = generateUUID();
-  const [rows, setRows] = useState([{ orderId: firstOrederId }]);
+  const [rows, setRows] = useState([{ orderId: firstOrederId, quantity: 1 }]);
   const [ordersLineItems, setOrdersLineItems] = useState({});
   const products = useOcProductList(options);
 
@@ -71,6 +71,7 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) =
 
     newRows.push({
       orderId: generateUUID(),
+      quantity: 1
     })
 
     setRows(newRows);
@@ -84,7 +85,6 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) =
 
   const onFormSubmit = async (e) => {
     e.preventDefault();
-
 
     for (const [orderId, value] of Object.entries(ordersLineItems)) {
       const valueType: any = value;
@@ -105,6 +105,41 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) =
     }
 
     router.push("/appointmentListing")
+  };
+
+  const updateLineItems = (orderId, valueType, value) => {
+    const newOrdersLineItems = { ...ordersLineItems };
+
+    if (typeof newOrdersLineItems[orderId] === 'undefined') {
+      newOrdersLineItems[orderId] = {};
+    }
+
+    newOrdersLineItems[orderId][valueType] = value;
+
+    setOrdersLineItems(newOrdersLineItems)
+  };
+
+  const adjustQuantity = (e) => {
+    const dir = e.currentTarget.dataset.direction;
+    const index = e.currentTarget.dataset.index;
+    const newRows = rows;
+
+    const orderId = e.currentTarget.dataset.orderId;
+    const valueType = "quantity";
+
+    e.preventDefault();
+
+    if (dir === "add") {
+      newRows[index].quantity += 1;
+      setRows([ ...newRows ]);
+      updateLineItems(orderId, valueType, newRows[index].quantity);
+    } else {
+      if (newRows[index].quantity - 1 >= 1) {
+        newRows[index].quantity -= 1;
+        setRows([ ...newRows ]);
+        updateLineItems(orderId, valueType, newRows[index].quantity);
+      }
+    }
   };
 
   if (!products) {
@@ -215,12 +250,18 @@ const SingleServicePage: FunctionComponent<OcProductListProps> = ({ options }) =
                     })}
                   </select>
                   <div className={styles.quantityWrapper}>
-                    <input name="quantity" defaultValue="1" type="number" min="1" data-order-id={row.orderId} data-value-type="quantity" onChange={onLineItemChange} />
+                    <button type="button" data-index={i} data-order-id={row.orderId} className={styles.remove} onClick={adjustQuantity}>
+                      <svg width="10" height="2" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h10v2H0z" fill="#FF6441" fillRule="evenodd"/></svg>
+                    </button>
+                    <input name="quantity" type="number" min="1" data-order-id={row.orderId} data-value-type="quantity" value={row.quantity} readOnly />
+                    <button type="button" data-index={i} data-order-id={row.orderId} data-direction="add" className={styles.add} onClick={adjustQuantity}>
+                      <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg"><path d="M6 0v4h4v2H6v4H4V6H0V4h4V0h2Z" fill="#FF6441" fillRule="evenodd"/></svg>
+                    </button>
                   </div>
                 </div>
               )
             })}
-            <div className={styles.stepper_button_wrapper}>
+            <div className={styles.addService}>
               <button className='button button--small' type="button" onClick={addRow}>Add another service</button>
             </div>
             <div className={styles.stepper_button_wrapper}>
